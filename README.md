@@ -2,7 +2,7 @@
 
 ## About the project
 
-dbie (read "debie") - simple repository tool for golang
+dbie (read "debie") - simple repository tool for golang with pagination
 
 ## Usage
 Define model as usually in bun (for now only bun backend supported)
