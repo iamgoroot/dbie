@@ -11,24 +11,23 @@ import (
 )
 
 func TestNewUserRepo(t *testing.T) {
-	type User struct {
-		Name, LastName, Group string
-	}
-	type UserRepo struct {
-		Repo[User]
-	}
+
 	sqldb, err := sql.Open(sqliteshim.DriverName(), "file::memory:?cache=shared")
+	if err != nil {
+		t.Fatal(err)
+	}
 	db := bun.NewDB(sqldb, sqlitedialect.New())
 	db.Exec("CREATE DATABASE test;")
 
-	_, err = db.NewCreateTable().Model(&User{}).Exec(context.Background())
-	fmt.Println("table create err", err)
-	repo := UserRepo{
-		BunBackend[User]{
-			Context: context.Background(),
-			DB:      db,
-		},
+	type User struct {
+		Name, LastName, Group string
 	}
+	_, err = db.NewCreateTable().Model(&User{}).Exec(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	repo := NewRepo[User](BunBackend[User]{DB: db, Context: context.Background()})
+
 	err = repo.Insert(User{
 		Name:     "User1Name",
 		LastName: "User1LastName",
@@ -57,6 +56,7 @@ func TestNewUserRepo(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	//Select Page
 	usersFromGroups1And6, err := repo.SelectPage(Page{
 		Limit:  3,
 		Offset: 1,
@@ -70,4 +70,24 @@ func TestNewUserRepo(t *testing.T) {
 		t.Fatal(err)
 	}
 	fmt.Println(usersFromGroups1And6)
+
+	// Select One
+	one, err := repo.SelectOne(`"user"."last_name"`, Eq, "User6LastName")
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println(one)
+
+	// Select that doesn't exist
+	one, err = repo.SelectOne(`"user"."last_name"`, Eq, "EXPECT ERROR BECAUSE I DONT EXIST")
+	if err == nil {
+		t.Fatal("expected error found user", one)
+	}
+	usersFromGroup2, err := repo.Select(`"user"."group"`, Eq, "group2")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(usersFromGroup2) != 2 {
+		t.Fatal("expected two users in group2 but found", usersFromGroup2)
+	}
 }
