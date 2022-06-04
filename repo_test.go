@@ -62,7 +62,7 @@ func TestNewUserRepo(t *testing.T) {
 		Offset: 1,
 	}, `"user"."group"`, In, []string{"group1", "group6"}, Sort{
 		Field: "last_name",
-		Desc:  true,
+		Order: ASC,
 	}, Sort{
 		Field: "name",
 	})
@@ -90,4 +90,5 @@ func TestNewUserRepo(t *testing.T) {
 	if len(usersFromGroup2) != 2 {
 		t.Fatal("expected two users in group2 but found", usersFromGroup2)
 	}
+	//TODO: assert
 }

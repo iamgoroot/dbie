@@ -9,18 +9,26 @@ type Page struct {
 
 type Sort struct {
 	Field string
-	Desc  bool
+	Order SortOrder
 }
 
 func (s Sort) String() string {
-	if s.Desc {
-		return fmt.Sprintf("%s DESC", s.Field)
-	}
-	return fmt.Sprintf("%s ASC", s.Field)
+	return fmt.Sprintf("%s %s", s.Field, s.Order)
+}
+
+type SortOrder int
+
+const (
+	ASC = 0 + iota
+	DESC
+)
+
+func (s SortOrder) String() string {
+	return [...]string{"ASC", "DESC"}[s]
 }
 
 //Paginated result
 type Paginated[Entity any] struct {
 	Data                 []Entity
-	Offset, Limit, Total int
+	Offset, Limit, Count int
 }

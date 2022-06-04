@@ -5,9 +5,13 @@
 dbie (read "debie") - simple repository tool for golang with pagination
 
 ## Usage
-Define model as usually in bun (for now only bun backend supported)
+Define model as usually in bun (for now only bun backend supported) and wanted repository methods
 ```golang
-package model
+package repo
+
+import (
+	"github.com/iamgoroot/dbie"
+)
 
 type User struct {
 	ID       int    `pg:",pk,autoincrement"`
@@ -15,21 +19,14 @@ type User struct {
 	LastName string `pg:"last_name"`
 	Group    string
 }
-```
-Define wanted repository methods
-```golang
-package repo
-import (
-	"github.com/iamgoroot/dbie"
-	"model"
-)
-//go:generate go run ../tool -type=UserRepo
+
+//go:generate go run "github.com/iamgoroot/dbietool" -type=UserRepo
 type UserRepo interface {
-	dbie.Repo[model.User]
-	SelectByName(name string) ([]model.User, error)
-	SelectByID(ID int) (model.User, error)
-	SelectByGroup(page dbie.Page, group string) (items dbie.Paginated[model.User], err error)
-	SelectByGroupIn(page dbie.Page, group ...string) (items dbie.Paginated[model.User], err error)
+	dbie.Repo[User]
+	SelectByName(name string) ([]User, error)
+	SelectByID(ID int) (User, error)
+	SelectByGroup(page dbie.Page, group string) (items dbie.Paginated[User], err error)
+	SelectByGroupIn(page dbie.Page, group ...string) (items dbie.Paginated[User], err error)
 }
 
 ```

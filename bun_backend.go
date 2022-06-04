@@ -7,6 +7,7 @@ import (
 )
 
 type BunBackend[Entity any] struct {
+	Backend[Entity]
 	context.Context
 	*bun.DB
 }
@@ -27,6 +28,7 @@ func (p BunBackend[Entity]) SelectPage(page Page, field string, operator Op, val
 	for _, order := range orders {
 		selectQuery.Order(order.String())
 	}
-	err = selectQuery.Offset(page.Offset).Limit(page.Limit).Scan(p.Context)
+	query := selectQuery.Offset(page.Offset).Limit(page.Limit)
+	items.Count, err = query.ScanAndCount(p.Context)
 	return
 }
