@@ -6,18 +6,17 @@ import (
 	"github.com/uptrace/bun"
 )
 
-type BunBackend[Entity any] struct {
-	Backend[Entity]
+type BunCore[Entity any] struct {
 	context.Context
 	*bun.DB
 }
 
-func (p BunBackend[Entity]) Insert(items ...Entity) error {
+func (p BunCore[Entity]) Insert(items ...Entity) error {
 	_, err := p.DB.NewInsert().Model(&items).Exec(p.Context)
 	return err
 }
 
-func (p BunBackend[Entity]) SelectPage(page Page, field string, operator Op, val any, orders ...Sort) (items Paginated[Entity], err error) {
+func (p BunCore[Entity]) SelectPage(page Page, field string, operator Op, val any, orders ...Sort) (items Paginated[Entity], err error) {
 	selectQuery := p.DB.NewSelect().Model(&items.Data)
 	switch operator {
 	case In, Nin:

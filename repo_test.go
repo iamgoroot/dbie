@@ -26,7 +26,7 @@ func TestNewUserRepo(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	repo := NewRepo[User](BunBackend[User]{DB: db, Context: context.Background()})
+	repo := NewRepo[User](BunCore[User]{DB: db, Context: context.Background()})
 
 	err = repo.Insert(User{
 		Name:     "User1Name",
