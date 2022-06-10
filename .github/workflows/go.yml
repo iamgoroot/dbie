@@ -1,22 +1,36 @@
-name: Go
+- name: Go Patch Coverage
+  # You may pin to the exact commit or the version.
+  # uses: seriousben/go-patch-cover-action@568a5c5b6bfef10f8734d8c81d913cfd1857fd69
+  uses: seriousben/go-patch-cover-action@v1.1.1
+  with:
+    # The version of go-patch-cover to use.
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    version: # default is 0.2.0
+    # go coverage file for the code after change.
+Can be generated with any cover mode.
+Example generation:
+  go test -coverprofile=coverage.out -covermode=count ./...
 
-jobs:
+    coverage_filename: # default is coverage.out
+    # Unified diff file of the patch to compute coverage for.
+Example generation:
+  git diff -U0 --no-color origin/main > patch.diff
 
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
+    diff_filename: # optional, default is patch.diff
+    # go coverage file for the code before changes.
+When not provided, previous coverage information will not be displayed.
 
-    - name: Set up Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: 1.18
+    previous_coverage_filename: # optional, default is prev_coverage.out
+    # Controls whether go-patch-cover action should create the diff file or not.
 
-    - name: Test
-      run: go test -v ./...
+    diff_enabled: # default is true
+    # The GitHub access token (e.g. secrets.GITHUB_TOKEN) used to create or update the comment. This defaults to {{ github.token }}.
+
+Modes:
+- git-notes: Use git notes: `refs/notes/coverage` to persist the coverage file on pushes.
+- file: Expect the file pointed to by the previous_coverage_filename input to already exist.
+
+    prev_coverage_mode: # optional, default is git-notes
+    # The GitHub access token (e.g. secrets.GITHUB_TOKEN) used to create or update the comment. This defaults to {{ github.token }}.
+
+    github_token: # optional, default is ${{ github.token }}
