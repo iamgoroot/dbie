@@ -13,7 +13,7 @@ type BunCore[Entity any] struct {
 
 func (p BunCore[Entity]) Insert(items ...Entity) error {
 	_, err := p.DB.NewInsert().Model(&items).Exec(p.Context)
-	return err
+	return Wrap(err)
 }
 
 func (p BunCore[Entity]) SelectPage(page Page, field string, operator Op, val any, orders ...Sort) (items Paginated[Entity], err error) {
@@ -29,5 +29,5 @@ func (p BunCore[Entity]) SelectPage(page Page, field string, operator Op, val an
 	}
 	query := selectQuery.Offset(page.Offset).Limit(page.Limit)
 	items.Count, err = query.ScanAndCount(p.Context)
-	return
+	return items, Wrap(err)
 }
