@@ -1,19 +1,2 @@
-name: "CI"
-
-on: ["push", "pull_request"]
-
-permissions:
-  contents: write
-  pull-requests: write
-
-jobs:
-  ci:
-    name: "Run CI"
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: WillAbides/setup-go-faster@v1.7.0
-      with:
-        go-version: "*"
-    - run: "go test -coverprofile=coverage.out -covermode=count ./..."
-    - uses: seriousben/go-patch-cover-action@v1
+name: Go Coverage Badge
+uses: tj-actions/coverage-badge-go@v1.2
