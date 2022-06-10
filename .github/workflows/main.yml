@@ -34,7 +34,7 @@ jobs:
       run: go test -count=1 -v ./...
     - name: Check code coverage
       run: |
-       go test -coverprofile=coverage.tmp.out ./...
+       go test -coverprofile=coverage.tmp.out ./test
         cat coverage.tmp.out | grep -v _mock.go > coverage.out
         go tool cover -html=coverage.out -o coverage.html
     - name: Add coverage.out to artifacts
