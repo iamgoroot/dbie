@@ -35,6 +35,6 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
       - name: Go Patch Coverage
-        uses: seriousben/go-patch-cover-action@v1.2
+        uses: seriousben/go-patch-cover-action@v1.1.1
         with:
           version: main 
