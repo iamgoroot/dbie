@@ -13,26 +13,37 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+env:
+  GO_VERSION: 1.18
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  all-checks:
+    name: checks
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
-      - name: Run Test
-        run: |
-          cd /home/runner/work/dbie/dbie && go test -v ./... -covermode=count -coverprofile=coverage.out -coverpkg=./...
-          cd /home/runner/work/dbie/dbie && go tool cover -func=coverage.out -o=coverage.out
-      - name: Go Coverage Badge  # Pass the `coverage.out` output to this action
-        uses: tj-actions/coverage-badge-go@v1.2
-        with:
-          filename: coverage.out
-      - name: Go Patch Coverage
-        uses: seriousben/go-patch-cover-action@v1.1.1
-        with:
-          version: main 
+    - name: set up go ${{env.GO_VERSION}}
+      uses: actions/setup-go@v2
+      with:
+        go-version: ${{env.GO_VERSION}}
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+    - name: Run go generate
+      run: go generate ./...
+    - name: Run tests
+      run: go test -count=1 -v ./...
+    - name: Check code coverage
+      run: |
+       go test -coverprofile=coverage.tmp.out ./...
+        cat coverage.tmp.out | grep -v _mock.go > coverage.out
+        go tool cover -html=coverage.out -o coverage.html
+    - name: Add coverage.out to artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: coverage-out
+        path: ./coverage.out
+    - name: Add coverage.html to artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: coverage-html
+        path: ./coverage.html
