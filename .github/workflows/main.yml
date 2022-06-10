@@ -26,9 +26,8 @@ jobs:
       - uses: actions/checkout@v3
       - name: Run Test
         run: |
-          cd $GITHUB_WORKSPACE
-          go test -v ./... -covermode=count -coverprofile=coverage.out -coverpkg=./...
-          go tool cover -func=coverage.out -o=coverage.out
+          cd $GITHUB_WORKSPACE && go test -v ./... -covermode=count -coverprofile=coverage.out -coverpkg=./...
+          cd $GITHUB_WORKSPACE && go tool cover -func=coverage.out -o=coverage.out
       - name: Go Coverage Badge  # Pass the `coverage.out` output to this action
         uses: tj-actions/coverage-badge-go@v1.2
         with:
