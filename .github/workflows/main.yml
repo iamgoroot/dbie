@@ -29,6 +29,8 @@ jobs:
       with:
         fetch-depth: 1
     - name: Run go generate
+      run: go mod download
+    - name: Run go generate
       run: go generate ./...
     - name: Run tests
       run: go test -count=1 -v ./...

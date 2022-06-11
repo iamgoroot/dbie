@@ -1,10 +1,9 @@
-package test
+package dbie
 
 import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/iamgoroot/dbie"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/sqlitedialect"
 	"github.com/uptrace/bun/driver/sqliteshim"
@@ -76,9 +75,9 @@ type user struct {
 	Name, LastName, Group string
 }
 
-func initUserRepo(t *testing.T) dbie.Repo[user] {
-	repo := dbie.NewRepo[user](
-		dbie.BunCore[user]{DB: makeTestDB(t), Context: context.Background()},
+func initUserRepo(t *testing.T) Repo[user] {
+	repo := NewRepo[user](
+		BunCore[user]{DB: makeTestDB(t), Context: context.Background()},
 	)
 	err := repo.Insert(createUsers()...)
 	if err != nil {

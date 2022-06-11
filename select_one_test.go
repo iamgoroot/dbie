@@ -1,7 +1,6 @@
-package test
+package dbie
 
 import (
-	"github.com/iamgoroot/dbie"
 	"reflect"
 	"testing"
 )
@@ -10,7 +9,7 @@ func TestSelectOne(t *testing.T) {
 	repo := initUserRepo(t)
 	defer repo.Close()
 	// Select One
-	singleUser, err := repo.SelectOne(`"user"."last_name"`, dbie.Eq, "UserLastName16")
+	singleUser, err := repo.SelectOne(`"user"."last_name"`, Eq, "UserLastName16")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -31,10 +30,10 @@ func TestSelectOneNoRows(t *testing.T) {
 	defer repo.Close()
 
 	// Select that doesn't exist
-	notFoundUser, err := repo.SelectOne(`"user"."last_name"`, dbie.Eq, "EXPECT ERROR BECAUSE I DONT EXIST")
+	notFoundUser, err := repo.SelectOne(`"user"."last_name"`, Eq, "EXPECT ERROR BECAUSE I DONT EXIST")
 
 	// Expect dbie.ErrNoRows
-	if typedErr, ok := err.(dbie.ErrNoRows); !ok {
+	if typedErr, ok := err.(ErrNoRows); !ok {
 		t.Fatal("expected error but found user", notFoundUser, "error", typedErr)
 	}
 	// Expect empty model

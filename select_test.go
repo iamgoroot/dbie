@@ -1,7 +1,6 @@
-package test
+package dbie
 
 import (
-	"github.com/iamgoroot/dbie"
 	"testing"
 )
 
@@ -10,7 +9,7 @@ func TestSelect(t *testing.T) {
 	defer repo.Close()
 
 	// Select slice
-	users, err := repo.Select(`"user"."last_name"`, dbie.In, []string{"UserLastName16", "UserLastName17"})
+	users, err := repo.Select(`"user"."last_name"`, In, []string{"UserLastName16", "UserLastName17"})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -35,7 +34,7 @@ func TestSelectNoRows(t *testing.T) {
 	defer repo.Close()
 
 	// Select that doesn't exist
-	noUsers, err := repo.Select(`"user"."last_name"`, dbie.Eq, "EXPECT ERROR BECAUSE I DONT EXIST")
+	noUsers, err := repo.Select(`"user"."last_name"`, Eq, "EXPECT ERROR BECAUSE I DONT EXIST")
 	if err != nil {
 		t.Fatal("Select for slice should not return error but noUsers slice", err)
 	}
