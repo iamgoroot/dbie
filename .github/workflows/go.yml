@@ -33,11 +33,14 @@ jobs:
         run: |
           go test -v ./... -covermode=count -coverprofile=coverage.out
           go tool cover -func=coverage.out -o=coverage.out
-
-      - name: Go Coverage Badge  # Pass the `coverage.out` output to this action
-        uses: tj-actions/coverage-badge-go@v1.2
-        with:
-          filename: coverage.out
+      - name: echo
+        run: |
+          ls
+          cat coverage.out
+#      - name: Go Coverage Badge  # Pass the `coverage.out` output to this action
+#        uses: tj-actions/coverage-badge-go@v1.2
+#        with:
+#          filename: coverage.out
 
       - name: Codecov Action
         # You may pin to the exact commit or the version.
