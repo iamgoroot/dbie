@@ -3,7 +3,7 @@
 dbie (read "debie") - simple repository tool for golang with pagination
 
 [![CI](https://github.com/iamgoroot/dbie/workflows/CI/badge.svg)](https://github.com/iamgoroot/dbie/actions?query=workflow%3ACI)
-![Coverage](https://img.shields.io/badge/Coverage-100.0%25-brightgreen)
+![Coverage](https://img.shields.io/badge/Coverage-40.7%25-yellow)
 [![Update release version.](https://github.com/iamgoroot/dbie/workflows/Update%20release%20version./badge.svg)](https://github.com/iamgoroot/dbie/actions?query=workflow%3A%22Update+release+version.%22)
 
 [![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?logo=ubuntu\&logoColor=white)](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on)
