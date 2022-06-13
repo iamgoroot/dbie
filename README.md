@@ -1,4 +1,5 @@
 # dbie
+![Coverage](https://img.shields.io/badge/Coverage-40.7%25-yellow)
 
 dbie (read "debie") - simple repository tool for golang with pagination
 
