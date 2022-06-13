@@ -1,8 +1,7 @@
 # dbie
-
-## About the project
-
 dbie (read "debie") - simple repository tool for golang with pagination
+
+[![run tests](https://github.com/iamgoroot/dbie/actions/workflows/test.yml/badge.svg?event=push)](https://github.com/iamgoroot/dbie/actions/workflows/test.yml)
 
 ## Usage
 Define model as usually in bun (for now only bun backend supported) and wanted repository methods
