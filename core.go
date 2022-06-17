@@ -17,7 +17,7 @@ func (p BunCore[Entity]) Insert(items ...Entity) error {
 }
 
 func (p BunCore[Entity]) SelectPage(page Page, field string, operator Op, val any, orders ...Sort) (items Paginated[Entity], err error) {
-	selectQuery := p.DB.NewSelect().Model(&items.Data)
+	selectQuery := p.DB.NewSelect().Model(&(items.Data))
 	switch operator {
 	case In, Nin:
 		selectQuery.Where(fmt.Sprint(field, operator), bun.In(val))

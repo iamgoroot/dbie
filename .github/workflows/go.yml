@@ -20,6 +20,7 @@ jobs:
         run: |
           go version
           go get -u golang.org/x/lint/golint
+
       - name: Build
         run: go build .
 
@@ -34,7 +35,8 @@ jobs:
           fail_ci_if_error: true # optional (default = false)
           verbose: true # optional (default = false)
 
-      - name: Run Vet & Lint
-        run: |
-          go vet ./...
-          golint -set_exit_status=1 ./...
+      - name: Run Vet
+        run:  go vet ./...
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v3
