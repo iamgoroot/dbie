@@ -62,7 +62,7 @@ func makeTestDB(t *testing.T) *bun.DB {
 		t.Fatal(err)
 	}
 	db := bun.NewDB(sqldb, sqlitedialect.New())
-	db.Exec("CREATE DATABASE test;")
+	_, _ = db.Exec("CREATE DATABASE test;")
 
 	_, err = db.NewCreateTable().Model(&user{}).Exec(context.Background())
 	if err != nil {

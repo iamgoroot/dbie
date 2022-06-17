@@ -22,7 +22,7 @@ type (
 var NoRows = ErrNoRows(sql.ErrNoRows)
 
 func (e Err) Error() string {
-	return fmt.Sprintf(e.error.Error(), e.desc)
+	return fmt.Sprint(e.error.Error(), e.desc)
 }
 
 func Wrap(err error) error {
