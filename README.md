@@ -6,6 +6,7 @@ dbie (read "debie") - simple repository tool for golang with pagination
 
 ## Usage
 Define model as usually in bun (for now only bun backend supported) and wanted repository methods
+
 ```golang
 package repo
 
