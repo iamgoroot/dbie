@@ -12,7 +12,7 @@ import (
 )
 
 func makeTestDB(t *testing.T) *bun.DB {
-	connStr := fmt.Sprintf("file::memory:%s?cache=shared", t.Name())
+	connStr := "file::memory:"
 	sqldb, err := sql.Open(sqliteshim.DriverName(), connStr)
 	if err != nil {
 		t.Fatal(err)

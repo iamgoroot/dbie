@@ -12,17 +12,19 @@ type (
 	InvalidCursorStateError           string
 	CardinalityViolationError         string
 	TransactionRollbackError          string
-	Error                             string
-	errWithFields                     interface {
+	Error                             struct {
+		error
+	}
+	errWithFields interface {
 		Error() string
 		Field(byte) string
 	}
 )
 
-var ErrNoRows = Error(sql.ErrNoRows.Error())
+var ErrNoRows = Error{sql.ErrNoRows}
 
 func (e Error) Error() string {
-	return fmt.Sprintf("dbie error: %s", string(e))
+	return fmt.Sprintf("dbie error: %s", e.error)
 }
 func (e IntegrityConstraintViolationError) Error() string {
 	return fmt.Sprintf("integrity constraint error: %s", string(e))
@@ -109,5 +111,5 @@ func wrapByField(err errWithFields) error {
 	case "40P01":
 		return TransactionRollbackError("deadlock_detected")
 	}
-	return err
+	return Error{err}
 }

@@ -17,6 +17,7 @@ func (p pgFakeError) Field(b byte) string {
 }
 
 func TestWrap(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		name    string
 		argErr  error
@@ -166,6 +167,11 @@ func TestWrap(t *testing.T) {
 			name:    "deadlock_detected",
 			argErr:  pgFakeError{'C': "40P01"},
 			wantErr: TransactionRollbackError("deadlock_detected"),
+		},
+		{
+			name:    "unknown pg error",
+			argErr:  pgFakeError{'C': "QWERTY"},
+			wantErr: fmt.Errorf("dbie error: %w", pgFakeError{'C': "QWERTY"}),
 		},
 	}
 	for _, tt := range tests {
