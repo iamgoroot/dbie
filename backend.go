@@ -19,13 +19,14 @@ func NewRepo[Entity any](backend Core[Entity]) Repo[Entity] {
 func (p GenericBackend[Entity]) Close() error {
 	return p.Core.Close()
 }
+
 func (p GenericBackend[Entity]) SelectOne(field string, operator Op, val any, orders ...Sort) (item Entity, err error) {
 	page, err := p.SelectPage(Page{Limit: 1}, field, operator, val, orders...)
 	if err == nil {
 		if len(page.Data) > 0 {
-			return page.Data[0], err //happy path
+			return page.Data[0], err // happy path
 		}
-		err = NoRows
+		err = ErrNoRows
 	}
 	return
 }

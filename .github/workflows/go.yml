@@ -16,11 +16,10 @@ jobs:
         with:
           go-version: '>=1.18'
 
+
       - name: Install dependencies
         run: |
           go version
-          go get -u golang.org/x/lint/golint
-
       - name: Build
         run: go build .
 
@@ -31,9 +30,10 @@ jobs:
         uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-          flags: unittests # optional
-          fail_ci_if_error: true # optional (default = false)
-          verbose: true # optional (default = false)
-
+          flags: unittests
+          fail_ci_if_error: true
+          verbose: true
       - name: Run Vet
         run:  go vet ./...
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v3

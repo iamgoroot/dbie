@@ -27,7 +27,7 @@ func (s SortOrder) String() string {
 	return [...]string{"ASC", "DESC"}[s]
 }
 
-//Paginated result
+// Paginated result
 type Paginated[Entity any] struct {
 	Data                 []Entity
 	Offset, Limit, Count int

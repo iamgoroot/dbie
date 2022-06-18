@@ -1,6 +1,7 @@
 package dbie
 
 import (
+	"errors"
 	"reflect"
 	"testing"
 )
@@ -33,8 +34,8 @@ func TestSelectOneNoRows(t *testing.T) {
 	notFoundUser, err := repo.SelectOne(`"user"."last_name"`, Eq, "EXPECT ERROR BECAUSE I DONT EXIST")
 
 	// Expect dbie.ErrNoRows
-	if typedErr, ok := err.(ErrNoRows); !ok {
-		t.Fatal("expected error but found user", notFoundUser, "error", typedErr)
+	if !errors.Is(err, ErrNoRows) {
+		t.Fatal("expected ErrNoRows", notFoundUser, "error", err)
 	}
 	// Expect empty model
 	if !reflect.DeepEqual(notFoundUser, user{}) {

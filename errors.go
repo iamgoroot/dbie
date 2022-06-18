@@ -2,97 +2,113 @@ package dbie
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
-	pgErr "github.com/uptrace/bun/driver/pgdriver"
 )
 
 type (
-	ErrIntegrityConstraintViolation Err
-	ErrInvalidTransactionState      Err
-	ErrInvalidCursorState           Err
-	ErrCardinalityViolation         Err
-	ErrTransactionRollback          Err
-	ErrNoRows                       error
-	Err                             struct {
+	IntegrityConstraintViolationError string
+	InvalidTransactionStateError      string
+	InvalidCursorStateError           string
+	CardinalityViolationError         string
+	TransactionRollbackError          string
+	Error                             string
+	errWithFields                     interface {
 		error
-		desc string
+		Field(byte) string
 	}
 )
 
-var NoRows = ErrNoRows(sql.ErrNoRows)
+var ErrNoRows = Error(sql.ErrNoRows.Error())
 
-func (e Err) Error() string {
-	return fmt.Sprint(e.error.Error(), e.desc)
+func (e Error) Error() string {
+	return fmt.Sprintf("dbie error: %s", string(e))
 }
-
+func (e IntegrityConstraintViolationError) Error() string {
+	return fmt.Sprintf("integrity constraint error: %s", string(e))
+}
+func (e InvalidTransactionStateError) Error() string {
+	return fmt.Sprintf("invalid transaction state error: %s", string(e))
+}
+func (e InvalidCursorStateError) Error() string {
+	return fmt.Sprintf("invalid cursor state error: %s", string(e))
+}
+func (e CardinalityViolationError) Error() string {
+	return fmt.Sprintf("cardinality violation error: %s", string(e))
+}
+func (e TransactionRollbackError) Error() string {
+	return fmt.Sprintf("integrity constraint error: %s", string(e))
+}
 func Wrap(err error) error {
+	if err == nil {
+		return err
+	}
 	switch typedErr := err.(type) {
-	case pgErr.Error:
+	case errWithFields:
 		return getPgDescr(typedErr)
 	}
-	switch err {
-	case sql.ErrNoRows:
-		return NoRows
+	if errors.Is(err, sql.ErrNoRows) {
+		return ErrNoRows
 	}
-	return err
+	return fmt.Errorf("dbie error: %w", err)
 }
 
-func getPgDescr(err pgErr.Error) error {
+func getPgDescr(err errWithFields) error {
 	switch err.Field('C') {
 	case "23000":
-		return ErrIntegrityConstraintViolation{err, "integrity_constraint_violation"}
+		return IntegrityConstraintViolationError("integrity_constraint_violation")
 	case "23001":
-		return ErrIntegrityConstraintViolation{err, "restrict_violation"}
+		return IntegrityConstraintViolationError("restrict_violation")
 	case "23502":
-		return ErrIntegrityConstraintViolation{err, "not_null_violation"}
+		return IntegrityConstraintViolationError("not_null_violation")
 	case "23503":
-		return ErrIntegrityConstraintViolation{err, "foreign_key_violation"}
+		return IntegrityConstraintViolationError("foreign_key_violation")
 	case "23505":
-		return ErrIntegrityConstraintViolation{err, "unique_violation"}
+		return IntegrityConstraintViolationError("unique_violation")
 	case "23514":
-		return ErrIntegrityConstraintViolation{err, "check_violation"}
+		return IntegrityConstraintViolationError("check_violation")
 	case "23P01":
-		return ErrIntegrityConstraintViolation{err, "exclusion_violation"}
+		return IntegrityConstraintViolationError("exclusion_violation")
 	case "24000":
-		return ErrInvalidCursorState{err, "invalid_cursor_state"}
+		return InvalidCursorStateError("invalid_cursor_state")
 	case "25000":
-		return ErrInvalidTransactionState{err, "invalid_transaction_state"}
+		return InvalidTransactionStateError("invalid_transaction_state")
 	case "25001":
-		return ErrInvalidTransactionState{err, "active_sql_transaction"}
+		return InvalidTransactionStateError("active_sql_transaction")
 	case "25002":
-		return ErrInvalidTransactionState{err, "branch_transaction_already_active"}
+		return InvalidTransactionStateError("branch_transaction_already_active")
 	case "25008":
-		return ErrInvalidTransactionState{err, "held_cursor_requires_same_isolation_level"}
+		return InvalidTransactionStateError("held_cursor_requires_same_isolation_level")
 	case "25003":
-		return ErrInvalidTransactionState{err, "inappropriate_access_mode_for_branch_transaction"}
+		return InvalidTransactionStateError("inappropriate_access_mode_for_branch_transaction")
 	case "25004":
-		return ErrInvalidTransactionState{err, "inappropriate_isolation_level_for_branch_transaction"}
+		return InvalidTransactionStateError("inappropriate_isolation_level_for_branch_transaction")
 	case "25005":
-		return ErrInvalidTransactionState{err, "no_active_sql_transaction_for_branch_transaction"}
+		return InvalidTransactionStateError("no_active_sql_transaction_for_branch_transaction")
 	case "25006":
-		return ErrInvalidTransactionState{err, "read_only_sql_transaction"}
+		return InvalidTransactionStateError("read_only_sql_transaction")
 	case "25007":
-		return ErrInvalidTransactionState{err, "schema_and_data_statement_mixing_not_supported"}
+		return InvalidTransactionStateError("schema_and_data_statement_mixing_not_supported")
 	case "25P01":
-		return ErrInvalidTransactionState{err, "no_active_sql_transaction"}
+		return InvalidTransactionStateError("no_active_sql_transaction")
 	case "25P02":
-		return ErrInvalidTransactionState{err, "in_failed_sql_transaction"}
+		return InvalidTransactionStateError("in_failed_sql_transaction")
 	case "25P03":
-		return ErrInvalidTransactionState{err, "idle_in_transaction_session_timeout"}
+		return InvalidTransactionStateError("idle_in_transaction_session_timeout")
 	case "0B000":
-		return ErrInvalidTransactionState{err, "invalid_transaction_initiation"}
+		return InvalidTransactionStateError("invalid_transaction_initiation")
 	case "21000":
-		return ErrCardinalityViolation{err, "cardinality_violation"}
+		return CardinalityViolationError("cardinality_violation")
 	case "40000":
-		return ErrTransactionRollback{err, "transaction_rollback"}
+		return TransactionRollbackError("transaction_rollback")
 	case "40002":
-		return ErrTransactionRollback{err, "transaction_integrity_constraint_violation"}
+		return TransactionRollbackError("transaction_integrity_constraint_violation")
 	case "40001":
-		return ErrTransactionRollback{err, "serialization_failure"}
+		return TransactionRollbackError("serialization_failure")
 	case "40003":
-		return ErrTransactionRollback{err, "statement_completion_unknown"}
+		return TransactionRollbackError("statement_completion_unknown")
 	case "40P01":
-		return ErrTransactionRollback{err, "deadlock_detected"}
+		return TransactionRollbackError("deadlock_detected")
 	}
 	return err
 }
