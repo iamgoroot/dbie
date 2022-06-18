@@ -7,6 +7,7 @@ import (
 )
 
 func TestSelectOne(t *testing.T) {
+	t.Parallel()
 	repo := initUserRepo(t)
 	defer repo.Close()
 	// Select One
@@ -27,6 +28,7 @@ func TestSelectOne(t *testing.T) {
 }
 
 func TestSelectOneNoRows(t *testing.T) {
+	t.Parallel()
 	repo := initUserRepo(t)
 	defer repo.Close()
 

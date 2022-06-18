@@ -14,7 +14,7 @@ type (
 	TransactionRollbackError          string
 	Error                             string
 	errWithFields                     interface {
-		error
+		Error() string
 		Field(byte) string
 	}
 )
@@ -43,8 +43,7 @@ func Wrap(err error) error {
 	if err == nil {
 		return err
 	}
-	switch typedErr := err.(type) {
-	case errWithFields:
+	if typedErr, ok := err.(errWithFields); ok {
 		return wrapByField(typedErr)
 	}
 	if errors.Is(err, sql.ErrNoRows) {

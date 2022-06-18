@@ -5,6 +5,7 @@ import (
 )
 
 func TestSelect(t *testing.T) {
+	t.Parallel()
 	repo := initUserRepo(t)
 	defer repo.Close()
 
@@ -30,6 +31,7 @@ func TestSelect(t *testing.T) {
 }
 
 func TestSelectPageOrdered(t *testing.T) {
+	t.Parallel()
 	repo := initUserRepo(t)
 	defer repo.Close()
 
