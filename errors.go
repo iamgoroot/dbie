@@ -45,7 +45,7 @@ func Wrap(err error) error {
 	}
 	switch typedErr := err.(type) {
 	case errWithFields:
-		return getPgDescr(typedErr)
+		return wrapByField(typedErr)
 	}
 	if errors.Is(err, sql.ErrNoRows) {
 		return ErrNoRows
@@ -53,7 +53,7 @@ func Wrap(err error) error {
 	return fmt.Errorf("dbie error: %w", err)
 }
 
-func getPgDescr(err errWithFields) error {
+func wrapByField(err errWithFields) error {
 	switch err.Field('C') {
 	case "23000":
 		return IntegrityConstraintViolationError("integrity_constraint_violation")
