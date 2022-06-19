@@ -2,7 +2,9 @@
 
 [![codecov](https://codecov.io/gh/iamgoroot/dbie/branch/main/graph/badge.svg?token=HDGXEOT8BA)](https://codecov.io/gh/iamgoroot/dbie)
 
-dbie (read "debie") - simple repository tool for golang with pagination
+dbie (read "debie") - simple repository lib for golang with pagination
+dbietool- tool for generating repositories out of interface signature (like Spring Data)
+
 
 ## Usage
 Define model as usually in bun (for now only bun backend supported) and wanted repository methods
