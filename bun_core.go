@@ -3,18 +3,17 @@ package dbie
 import (
 	"context"
 	"fmt"
-
 	"github.com/uptrace/bun"
 )
 
 type BunCore[Entity any] struct {
+	GenericBackend[Entity]
 	context.Context
 	*bun.DB
 }
 
 func (p BunCore[Entity]) InsertCtx(ctx context.Context, items ...Entity) error {
 	_, err := p.DB.NewInsert().Model(&items).Exec(ctx)
-
 	return Wrap(err)
 }
 
@@ -32,20 +31,35 @@ func (p BunCore[Entity]) SelectPageCtx(
 	ctx context.Context, page Page, field string, operator Op, val any, orders ...Sort,
 ) (items Paginated[Entity], err error) {
 	selectQuery := p.DB.NewSelect().Model(&(items.Data))
+	tableName := selectQuery.GetModel().(bun.TableModel).Table().Alias
+	var op string
 	switch operator {
-	case In, Nin:
-		selectQuery.Where(fmt.Sprint(field, operator), bun.In(val))
+	case In:
+		op = " IN (?)"
+		val = bun.In(val)
+	case Nin:
+		op = " NIN (?)"
+		val = bun.In(val)
 	default:
-		selectQuery.Where(fmt.Sprint(field, operator), val)
+		op = operator.String()
 	}
+	stmt := render(tableName, field, op)
+	selectQuery.Where(stmt, val)
 
 	for _, order := range orders {
-		selectQuery.Order(order.String())
+		selectQuery.OrderExpr(render(tableName, order.Field, order.Order.String()))
 	}
 	query := selectQuery.Offset(page.Offset).Limit(page.Limit)
-
-	items.Count, err = query.ScanAndCount(ctx)
-	items.Offset, items.Limit = page.Offset, page.Limit
+	var count int
+	count, err = query.ScanAndCount(ctx)
+	if err != nil {
+		return Paginated[Entity]{}, Wrap(err)
+	}
+	items.Offset, items.Limit, items.Count = page.Offset, page.Limit, count
 
 	return items, Wrap(err)
+}
+
+func render(tableName, field, op string) string {
+	return fmt.Sprintf(`"%s"."%s" %s`, tableName, field, op)
 }

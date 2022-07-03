@@ -4,6 +4,9 @@ type Core[Entity any] interface {
 	Insert(items ...Entity) error
 	SelectPage(page Page, field string, operator Op, val any, orders ...Sort) (items Paginated[Entity], err error)
 	Close() error
+
+	Select(field string, operator Op, val any, orders ...Sort) (items []Entity, err error)
+	SelectOne(field string, operator Op, val any, orders ...Sort) (item Entity, err error)
 }
 
 type GenericBackend[Entity any] struct {
@@ -17,7 +20,10 @@ func NewRepo[Entity any](backend Core[Entity]) Repo[Entity] {
 }
 
 func (p GenericBackend[Entity]) Close() error {
-	return p.Core.Close()
+	if p.Core != nil {
+		return p.Core.Close()
+	}
+	return nil
 }
 
 func (p GenericBackend[Entity]) SelectOne(field string, operator Op, val any, orders ...Sort) (item Entity, err error) {

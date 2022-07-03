@@ -31,8 +31,8 @@ func (op Op) String() string {
 		" ILIKE ?",
 		" NOT LIKE ?",
 		" NOT ILIKE ?",
-		" IN ( ? )",
-		" NOT IN ( ? )",
+		" IN ?",
+		" NOT IN ?",
 		" IS NULL",
 		" IS NOT NULL",
 	}[op]

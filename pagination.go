@@ -1,20 +1,19 @@
 package dbie
 
-import "fmt"
-
 // Page Paginated request
 type Page struct {
-	Offset, Limit int
+	Offset int `json:"offset,omitempty"`
+	Limit  int `json:"limit,omitempty"`
 }
 
 type Sort struct {
-	Field string
-	Order SortOrder
+	Field string    `json:"field,omitempty"`
+	Order SortOrder `json:"order,omitempty"`
 }
 
-func (s Sort) String() string {
-	return fmt.Sprintf("%s %s", s.Field, s.Order)
-}
+//func (s Sort) String() string {
+//	return fmt.Sprintf(`"%s" %s`, s.Field, s.Order)
+//}
 
 type SortOrder int
 
@@ -29,6 +28,9 @@ func (s SortOrder) String() string {
 
 // Paginated result
 type Paginated[Entity any] struct {
-	Data                 []Entity
-	Offset, Limit, Count int
+	Data   []Entity `json:"data,omitempty"`
+	Offset int      `json:"offset,omitempty"`
+	Limit  int      `json:"limit,omitempty"`
+	Count  int      `json:"count,omitempty"`
+	Order  []Sort   `json:"order,omitempty"`
 }

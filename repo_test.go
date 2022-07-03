@@ -4,11 +4,13 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"testing"
-
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/sqlitedialect"
 	"github.com/uptrace/bun/driver/sqliteshim"
+	"github.com/uptrace/bun/extra/bundebug"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
+	"testing"
 )
 
 func makeTestDB(t *testing.T) *bun.DB {
@@ -19,34 +21,59 @@ func makeTestDB(t *testing.T) *bun.DB {
 	}
 	db := bun.NewDB(sqldb, sqlitedialect.New())
 	_, _ = db.Exec("CREATE DATABASE test;")
-
-	_, err = db.NewCreateTable().Model(&user{}).Exec(context.Background())
+	db.AddQueryHook(bundebug.NewQueryHook())
+	_, err = db.NewCreateTable().Model(&testUser{}).Exec(context.Background())
 	if err != nil {
 		t.Fatal(err)
 	}
 	return db
 }
 
-type user struct {
-	Name, LastName, Group string
+type testUser struct {
+	gorm.Model
+	ID       int `gorm:"primaryKey"`
+	Name     string
+	LastName string
+	Group    string
 }
 
-func initUserRepo(t *testing.T) Repo[user] {
-	repo := NewRepo[user](
-		BunCore[user]{DB: makeTestDB(t), Context: context.Background()},
+func initBunRepo(t *testing.T) Repo[testUser] {
+	repo := NewRepo[testUser](
+		BunCore[testUser]{DB: makeTestDB(t), Context: context.Background()},
 	)
-	err := repo.Insert(createUsers()...)
-	if err != nil {
-		t.Fatal(err)
-	}
 	return repo
 }
 
-func createUsers() (users []user) {
+func makeGormTestDB(t *testing.T) *gorm.DB {
+	dsn := "file::memory:"
+	dialect := sqlite.Open(dsn)
+	db, err := gorm.Open(dialect, &gorm.Config{})
+	db = db.Debug()
+	if err != nil {
+		panic("failed to connect database")
+	}
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	//_ = db.Exec("CREATE DATABASE IF NOT EXISTS test;")
+	db.AutoMigrate(testUser{})
+	return db
+}
+
+func initGormRepo(t *testing.T) Repo[testUser] {
+	repo := NewRepo[testUser](
+		GormCore[testUser]{DB: makeGormTestDB(t), Context: context.Background()},
+	)
+
+	return repo
+}
+
+func createUsers() (users []testUser) {
 	const n = 100
-	users = make([]user, n)
+	users = make([]testUser, n)
 	for i := 0; i < n; i++ {
-		users[i] = user{
+		users[i] = testUser{
 			Name:     fmt.Sprintf("User%dName", i),
 			LastName: fmt.Sprintf("UserLastName%d", i),
 			Group:    fmt.Sprintf("group%d", i%10),
@@ -55,7 +82,7 @@ func createUsers() (users []user) {
 	return users
 }
 
-func assertUser(t *testing.T, expected user, got user) {
+func assertUser(t *testing.T, expected testUser, got testUser) {
 	switch {
 	case got.Group != expected.Group:
 		t.Fatal("expected singleUser.Group", expected.Group, "got", got.Group)
