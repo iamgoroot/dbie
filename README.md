@@ -7,7 +7,7 @@ dbietool- tool for generating repositories out of interface signature (like Spri
 
 
 ## Usage
-Define model as usually in bun (for now only bun backend supported) and wanted repository methods
+Define model as usually in bun or gorm
 
 ```golang
 package repo

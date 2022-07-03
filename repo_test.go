@@ -52,12 +52,10 @@ func makeGormTestDB(t *testing.T) *gorm.DB {
 	if err != nil {
 		panic("failed to connect database")
 	}
-
+	err = db.AutoMigrate(testUser{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	//_ = db.Exec("CREATE DATABASE IF NOT EXISTS test;")
-	db.AutoMigrate(testUser{})
 	return db
 }
 
