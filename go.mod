@@ -7,7 +7,7 @@ require (
 	github.com/uptrace/bun/dialect/sqlitedialect v1.1.5
 	github.com/uptrace/bun/driver/sqliteshim v1.1.5
 	github.com/uptrace/bun/extra/bundebug v1.1.5
-	gorm.io/driver/sqlite v1.3.5
+	gorm.io/driver/sqlite v1.3.6
 	gorm.io/gorm v1.23.7
 
 )
