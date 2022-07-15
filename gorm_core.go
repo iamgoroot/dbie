@@ -13,6 +13,12 @@ type GormCore[Entity any] struct {
 	DB *gorm.DB
 }
 
+func NewGorm[Entity any](ctx context.Context, db *gorm.DB) Repo[Entity] {
+	return NewRepo[Entity](
+		GormCore[Entity]{Context: ctx, DB: db},
+	)
+}
+
 func (p GormCore[Entity]) Close() error {
 	db, err := p.DB.DB()
 	if err != nil {

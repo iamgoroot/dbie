@@ -12,6 +12,12 @@ type BunCore[Entity any] struct {
 	*bun.DB
 }
 
+func NewBun[Entity any](ctx context.Context, db *bun.DB) Repo[Entity] {
+	return NewRepo[Entity](
+		BunCore[Entity]{Context: ctx, DB: db},
+	)
+}
+
 func (p BunCore[Entity]) InsertCtx(ctx context.Context, items ...Entity) error {
 	_, err := p.DB.NewInsert().Model(&items).Exec(ctx)
 	return Wrap(err)
