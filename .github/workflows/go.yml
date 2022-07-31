@@ -27,7 +27,7 @@ jobs:
           POSTGRES_DB: test
           POSTGRES_USER: user
           POSTGRES_PASSWORD: pass
-          POSTGRES_PORT: 5432
+          POSTGRES_PORT: 5433
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
