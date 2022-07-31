@@ -47,10 +47,12 @@ jobs:
           go version
       - name: Build
         run: go build .
-      - name: Test With Coverage
+      - name: Test root package coverage
         run: |
           go test -gcflags=-l -v  -coverprofile=coverage.txt -coverpkg=../... -covermode=atomic ./...
-          cd test && go get ./... && go test -gcflags=-l -v  -coverprofile=../coverage1.txt -coverpkg=../... -covermode=atomic ./...
+      - name: Run integration tests
+        run: |
+          cd test && go get ./... && go test -gcflags=-l -v  -coverprofile=coverage.txt -coverpkg=../... -covermode=atomic ./...
 #          pwd
 #               cat coverage0.txt >> coverage.txt
 #          cat coverage1.txt >> coverage.txt
