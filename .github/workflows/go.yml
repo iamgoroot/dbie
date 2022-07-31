@@ -15,8 +15,6 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: '>=1.18'
-
-
       - name: Install dependencies
         run: |
           go version
@@ -24,8 +22,7 @@ jobs:
         run: go build .
 
       - name: Test With Coverage
-        run: go test -gcflags=-l -v  -coverprofile=coverage.txt -covermode=atomic ./...
-
+        run: cd test && go test -gcflags=-l -v  -coverprofile=../coverage.txt -coverpkg=../... -covermode=atomic ./...
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
         with:
