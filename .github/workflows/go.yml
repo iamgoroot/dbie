@@ -18,6 +18,7 @@ jobs:
       - name: Install dependencies
         run: |
           go version
+          go get -v ./...
       - name: Build
         run: go build .
 
