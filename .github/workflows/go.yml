@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     services:
-      postgres_bun:
+      pg_bun:
         image: postgres
         env:
           POSTGRES_DB: test
@@ -21,13 +21,15 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-      postgres_gorm:
+      pg_gorm:
         image: postgres
         env:
           POSTGRES_DB: test
           POSTGRES_USER: user
           POSTGRES_PASSWORD: pass
           POSTGRES_PORT: 5433
+        ports:
+          - 5433:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -43,7 +45,6 @@ jobs:
           go version
       - name: Build
         run: go build .
-
       - name: Test With Coverage
         run: |
           go test -gcflags=-l -v  -coverprofile=coverage0.txt -coverpkg=../... -covermode=atomic ./...
