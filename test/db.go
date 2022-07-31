@@ -18,9 +18,9 @@ import (
 )
 
 var dsn = []string{
-	"postgres://postgres:postgres@localhost:5432/repo ",
-	"user:pass@/repo",
-	"sqlserver://sa:passWORD1@localhost:14339?database=repo",
+	"postgres://postgres:postgres@localhost:5432/test ",
+	"user:pass@/test",
+	"sqlserver://sa:passWORD1@localhost:14339?database=test",
 	"file::memory:?cache=shared",
 }
 
@@ -54,7 +54,6 @@ func makeBunPostgres(dsn string) *bun.DB {
 	db.AddQueryHook(bundebug.NewQueryHook(
 		bundebug.WithEnabled(true),
 	))
-
 	db.NewDelete().Model(&model.User{}).Exec(context.Background())
 	_, _ = db.NewCreateTable().Model(&model.User{}).Exec(context.Background())
 	return db
