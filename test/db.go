@@ -18,9 +18,9 @@ import (
 )
 
 var dsn = []string{
-	"postgres://postgres:postgres@localhost:5432/test ",
-	"user:pass@/test",
-	"sqlserver://sa:passWORD1@localhost:14339?database=test",
+	"postgres://user:pass@postgres:5432/test ",
+	"user:pass@mysql/test",
+	//"sqlserver://sa:passWORD1@localhost:14339?database=test",
 	"file::memory:?cache=shared",
 }
 
