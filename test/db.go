@@ -17,13 +17,6 @@ import (
 	"gorm.io/gorm"
 )
 
-var dsn = []string{
-	"postgres://user:pass@postgres:5432/test ",
-	"user:pass@mysql/test",
-	//"sqlserver://sa:passWORD1@localhost:14339?database=test",
-	"file::memory:?cache=shared",
-}
-
 func makeBunSqlite(dsn string) *bun.DB {
 	sqldb, _ := sql.Open(sqliteshim.DriverName(), dsn)
 	db := bun.NewDB(sqldb, sqlitedialect.New())

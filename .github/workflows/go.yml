@@ -10,12 +10,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     services:
-      postgres:
+      postgres_bun:
         image: postgres
         env:
-          POSTGRES_PASSWORD: postgres
           POSTGRES_DB: test
-          POSTGRES_USER: postgres
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: pass
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      postgres_gorm:
+        image: postgres
+        env:
+          POSTGRES_DB: test
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: pass
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
