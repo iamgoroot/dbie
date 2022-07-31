@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: |
           go version
-          go get -v ./...
+          go get github.com/iamgoroot/dbie/core/test
       - name: Build
         run: go build .
 
