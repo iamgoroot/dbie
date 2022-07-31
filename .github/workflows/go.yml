@@ -18,12 +18,15 @@ jobs:
       - name: Install dependencies
         run: |
           go version
-          go get github.com/iamgoroot/dbie/core/test
       - name: Build
         run: go build .
 
       - name: Test With Coverage
-        run: cd test && go test -gcflags=-l -v  -coverprofile=../coverage.txt -coverpkg=../... -covermode=atomic ./...
+        run: |
+          go test -gcflags=-l -v  -coverprofile=../coverage0.txt -coverpkg=../... -covermode=atomic ./...
+          cat coverage0.txt >> coverage.txt
+          cd test && go get ./... && go test -gcflags=-l -v  -coverprofile=../coverage1.txt -coverpkg=../... -covermode=atomic ./...
+          cat coverage1.txt >> coverage.txt
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
         with:
