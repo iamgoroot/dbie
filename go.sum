@@ -32,8 +32,8 @@ github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/
 github.com/stretchr/testify v1.7.0 h1:nwc3DEeHmmLAfoZucVR881uASk0Mfjw8xYJ99tb5CcY=
 github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc h1:9lRDQMhESg+zvGYmW5DyG0UqvY96Bu5QYsTLvCHdrgo=
 github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc/go.mod h1:bciPuU6GHm1iF1pBvUfxfsH0Wmnc2VbpgvbI9ZWuIRs=
-github.com/uptrace/bun v1.1.5 h1:YqQvSXWXTOhz1uqkYO2F2XV6BqY9a/tXuA8lQlW0FjE=
-github.com/uptrace/bun v1.1.5/go.mod h1:Z2Pd3cRvNKbrYuL6Gp1XGjA9QEYz+rDz5KkEi9MZLnQ=
+github.com/uptrace/bun v1.1.7 h1:biOoh5dov69hQPBlaRsXSHoEOIEnCxFzQvUmbscSNJI=
+github.com/uptrace/bun v1.1.7/go.mod h1:Z2Pd3cRvNKbrYuL6Gp1XGjA9QEYz+rDz5KkEi9MZLnQ=
 github.com/uptrace/bun/dialect/sqlitedialect v1.1.5 h1:dCB4bBJbxJDtiAuIXtVDwJ0w8e38B0J42KnV9Pye8V0=
 github.com/uptrace/bun/dialect/sqlitedialect v1.1.5/go.mod h1:UFtR6BfHq+XVdeIdp5suEWfi8SuIgvAlo0miHCzUIHs=
 github.com/uptrace/bun/driver/sqliteshim v1.1.5 h1:l/CpWJYcvsPldfUB33QBnlY3tHpIHTnWUQsHqBRD5pI=

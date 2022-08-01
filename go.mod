@@ -3,7 +3,7 @@ module github.com/iamgoroot/dbie
 go 1.18
 
 require (
-	github.com/uptrace/bun v1.1.5
+	github.com/uptrace/bun v1.1.7
 	github.com/uptrace/bun/dialect/sqlitedialect v1.1.5
 	github.com/uptrace/bun/driver/sqliteshim v1.1.5
 	github.com/uptrace/bun/extra/bundebug v1.1.5
