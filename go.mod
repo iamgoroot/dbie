@@ -3,10 +3,10 @@ module github.com/iamgoroot/dbie
 go 1.18
 
 require (
-	github.com/uptrace/bun v1.1.5
+	github.com/uptrace/bun v1.1.7
 	github.com/uptrace/bun/dialect/sqlitedialect v1.1.5
 	github.com/uptrace/bun/driver/sqliteshim v1.1.5
-	github.com/uptrace/bun/extra/bundebug v1.1.5
+	github.com/uptrace/bun/extra/bundebug v1.1.7
 	gorm.io/driver/sqlite v1.3.5
 	gorm.io/gorm v1.23.7
 
@@ -26,7 +26,7 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3 // indirect
-	golang.org/x/sys v0.0.0-20220503163025-988cb79eb6c6 // indirect
+	golang.org/x/sys v0.0.0-20220728004956-3c1f35247d10 // indirect
 	golang.org/x/tools v0.1.10 // indirect
 	golang.org/x/xerrors v0.0.0-20220411194840-2f41105eb62f // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
