@@ -1,25 +1,31 @@
-package dbie
+package gorm
 
 import (
 	"context"
 	"fmt"
+	"github.com/iamgoroot/dbie"
+	"github.com/iamgoroot/dbie/core"
 	"gorm.io/gorm"
 	"reflect"
 )
 
-type GormCore[Entity any] struct {
-	GenericBackend[Entity]
+type Gorm[Entity any] struct {
+	core.GenericBackend[Entity]
 	context.Context
 	DB *gorm.DB
 }
 
-func NewGorm[Entity any](ctx context.Context, db *gorm.DB) Repo[Entity] {
-	return NewRepo[Entity](
-		GormCore[Entity]{Context: ctx, DB: db},
+func New[Entity any](ctx context.Context, db *gorm.DB) dbie.Repo[Entity] {
+	return core.NewRepo[Entity](
+		Gorm[Entity]{Context: ctx, DB: db},
 	)
 }
+func (p Gorm[Entity]) Init() error {
+	var model Entity
+	return p.DB.WithContext(p.Context).AutoMigrate(&model)
+}
 
-func (p GormCore[Entity]) Close() error {
+func (p Gorm[Entity]) Close() error {
 	db, err := p.DB.DB()
 	if err != nil {
 		return err
@@ -27,27 +33,27 @@ func (p GormCore[Entity]) Close() error {
 	return db.Close()
 }
 
-func (p GormCore[Entity]) InsertCtx(ctx context.Context, items ...Entity) error {
+func (p Gorm[Entity]) InsertCtx(ctx context.Context, items ...Entity) error {
 	err := p.DB.WithContext(ctx).Create(&items)
-	return Wrap(err.Error)
+	return dbie.Wrap(err.Error)
 }
 
-func (p GormCore[Entity]) Insert(items ...Entity) error {
+func (p Gorm[Entity]) Insert(items ...Entity) error {
 	return p.InsertCtx(p.Context, items...)
 }
 
-func (p GormCore[Entity]) SelectPage(
-	page Page, field string, operator Op, val any, orders ...Sort,
-) (Paginated[Entity], error) {
+func (p Gorm[Entity]) SelectPage(
+	page dbie.Page, field string, operator dbie.Op, val any, orders ...dbie.Sort,
+) (dbie.Paginated[Entity], error) {
 	return p.SelectPageCtx(p.Context, page, field, operator, val, orders...)
 }
 
-func (p GormCore[Entity]) SelectPageCtx(
-	ctx context.Context, page Page, field string, operator Op, val any, orders ...Sort,
-) (items Paginated[Entity], err error) {
+func (p Gorm[Entity]) SelectPageCtx(
+	ctx context.Context, page dbie.Page, field string, operator dbie.Op, val any, orders ...dbie.Sort,
+) (items dbie.Paginated[Entity], err error) {
 	selectQuery := p.DB.Model(&(items.Data)).WithContext(ctx)
 	switch operator {
-	case In, Nin:
+	case dbie.In, dbie.Nin:
 		var params []interface{}
 		rv := reflect.ValueOf(val)
 		if rv.Kind() == reflect.Slice {
@@ -69,7 +75,7 @@ func (p GormCore[Entity]) SelectPageCtx(
 	var count int64
 	res := selectQuery.Count(&count)
 	if res.Error != nil {
-		return Paginated[Entity]{}, Wrap(res.Error)
+		return dbie.Paginated[Entity]{}, dbie.Wrap(res.Error)
 	}
 	for _, order := range orders {
 		selectQuery.Order(render(selectQuery.Statement.Schema.Table, order.Field, order.Order.String()))
@@ -77,8 +83,12 @@ func (p GormCore[Entity]) SelectPageCtx(
 	selectQuery.Offset(page.Offset).Limit(page.Limit)
 	res = selectQuery.Find(&(items.Data))
 	if res.Error != nil {
-		return Paginated[Entity]{}, Wrap(res.Error)
+		return dbie.Paginated[Entity]{}, dbie.Wrap(res.Error)
 	}
 	items.Count, items.Offset, items.Limit = int(count), page.Offset, page.Limit
-	return items, Wrap(res.Error)
+	return items, dbie.Wrap(res.Error)
+}
+
+func render(tableName, field, op string) string {
+	return fmt.Sprintf(`"%s"."%s" %s`, tableName, field, op)
 }

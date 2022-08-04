@@ -11,10 +11,6 @@ type Sort struct {
 	Order SortOrder `json:"order,omitempty"`
 }
 
-//func (s Sort) String() string {
-//	return fmt.Sprintf(`"%s" %s`, s.Field, s.Order)
-//}
-
 type SortOrder int
 
 const (
