@@ -1,25 +1,18 @@
 package core
 
-import "github.com/iamgoroot/dbie"
+import (
+	"github.com/iamgoroot/dbie"
+)
 
 type Core[Entity any] interface {
 	Init() error
 	Insert(items ...Entity) error
 	SelectPage(page dbie.Page, field string, operator dbie.Op, val any, orders ...dbie.Sort) (items dbie.Paginated[Entity], err error)
 	Close() error
-
-	Select(field string, operator dbie.Op, val any, orders ...dbie.Sort) (items []Entity, err error)
-	SelectOne(field string, operator dbie.Op, val any, orders ...dbie.Sort) (item Entity, err error)
 }
 
 type GenericBackend[Entity any] struct {
 	Core[Entity]
-}
-
-func NewRepo[Entity any](backend Core[Entity]) dbie.Repo[Entity] {
-	return GenericBackend[Entity]{
-		Core: backend,
-	}
 }
 
 func (p GenericBackend[Entity]) Close() error {

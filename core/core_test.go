@@ -58,9 +58,7 @@ func TestGenericBackend_SelectOne(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			core := CoreMock[entity]{}.
 				SelectPageExpect(tt.wantPage, tt.wantField, tt.wantOperator, tt.wantVal, tt.wantOrders...)(tt.returnPage, nil)
-			repo := NewRepo[entity](GenericBackend[entity]{
-				Core: core,
-			})
+			repo := GenericBackend[entity]{Core: core}
 			one, err := repo.SelectOne("id", dbie.Eq, "1", tt.wantOrders...)
 			switch {
 			case err != nil:
@@ -101,7 +99,7 @@ func TestGenericBackend_Select(t *testing.T) {
 		},
 	} {
 		t.Run(tt.name, func(t *testing.T) {
-			repo := NewRepo[entity](GenericBackend[entity]{
+			repo := GenericBackend[entity]{
 				Core: CoreMock[entity]{
 					SelectPageMock: func(page dbie.Page, field string, operator dbie.Op, val any, orders ...dbie.Sort) (items dbie.Paginated[entity], err error) {
 						switch {
@@ -115,7 +113,7 @@ func TestGenericBackend_Select(t *testing.T) {
 						return tt.returnPage, err
 					},
 				},
-			})
+			}
 			one, err := repo.Select("val", dbie.Eq, "1")
 
 			switch {
@@ -134,11 +132,11 @@ func TestGenericBackend_Close(t *testing.T) {
 		Val string
 	}
 	mockRepoClose := func(errFunc func() error) dbie.Repo[entity] {
-		return NewRepo[entity](GenericBackend[entity]{
+		return GenericBackend[entity]{
 			Core: CoreMock[entity]{
 				CloseMock: errFunc,
 			},
-		})
+		}
 	}
 	t.Run("test close triggers core.Close", func(t *testing.T) {
 		var count int32

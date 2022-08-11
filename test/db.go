@@ -5,13 +5,11 @@ import (
 	"database/sql"
 	"github.com/iamgoroot/dbie/core/test/model"
 	"github.com/uptrace/bun"
-	"github.com/uptrace/bun/dialect/mysqldialect"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/dialect/sqlitedialect"
 	"github.com/uptrace/bun/driver/pgdriver"
 	"github.com/uptrace/bun/driver/sqliteshim"
 	"github.com/uptrace/bun/extra/bundebug"
-	mysqlGorm "gorm.io/driver/mysql"
 	pgGorm "gorm.io/driver/postgres"
 	sqliteGorm "gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -32,15 +30,7 @@ func makeGormSqlite(dsn string) *gorm.DB {
 	db.Where("1 = 1").Delete(&model.User{})
 	return db
 }
-func makeGormMysql(dsn string) *gorm.DB {
-	db, err := gorm.Open(mysqlGorm.Open(dsn), &gorm.Config{})
-	if err != nil {
-		panic(err)
-	}
-	db.AutoMigrate(&model.User{})
-	db.Where("1 = 1").Delete(&model.User{})
-	return db
-}
+
 func makeBunPostgres(dsn string) *bun.DB {
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
 	db := bun.NewDB(sqldb, pgdialect.New())
@@ -58,10 +48,22 @@ func makeGormPostgres(dsn string) *gorm.DB {
 	return db
 }
 
-func makeBunMysql(dsn string) *bun.DB {
-	sqldb, _ := sql.Open("mysql", dsn)
-	db := bun.NewDB(sqldb, mysqldialect.New())
-	db.NewDelete().Model(&model.User{}).Exec(context.Background())
-	_, _ = db.NewCreateTable().Model(&model.User{}).Exec(context.Background())
-	return db
-}
+// TODO: fix Mysql
+//func makeBunMysql(dsn string) *bun.DB {
+//	sqldb, _ := sql.Open("mysql", dsn)
+//	db := bun.NewDB(sqldb, mysqldialect.New())
+//	db.NewDelete().Model(&model.User{}).Exec(context.Background())
+//	_, _ = db.NewCreateTable().Model(&model.User{}).Exec(context.Background())
+//	return db
+//}
+
+// TODO: fix Mysql
+//func makeGormMysql(dsn string) *gorm.DB {
+//	db, err := gorm.Open(mysqlGorm.Open(dsn), &gorm.Config{})
+//	if err != nil {
+//		panic(err)
+//	}
+//	db.AutoMigrate(&model.User{})
+//	db.Where("1 = 1").Delete(&model.User{})
+//	return db
+//}
