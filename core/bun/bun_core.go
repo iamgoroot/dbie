@@ -48,7 +48,7 @@ func (core Bun[Entity]) SelectPageCtx(
 		op = " IN (?)"
 		val = bun.In(val)
 	case dbie.Nin:
-		op = " NIN (?)"
+		op = " NOT IN (?)"
 		val = bun.In(val)
 	default:
 		op = operator.String()

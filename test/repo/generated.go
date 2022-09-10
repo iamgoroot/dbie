@@ -46,8 +46,12 @@ func (g UserImpl) SelectByGroupIn(page dbie.Page, group ...string) (dbie.Paginat
 	return g.Repo.SelectPage(page, "group", dbie.In, group)
 }
 
-func (g UserImpl) SelectByGroupNin(page dbie.Page, group ...string) (dbie.Paginated[model.User], error) {
-	return g.Repo.SelectPage(page, "group", dbie.Nin, group)
+var sortSelectByGroupNinOrderByGroupAscSetting = []dbie.Sort{
+	{Field: `group`, Order: dbie.ASC},
+}
+
+func (g UserImpl) SelectByGroupNinOrderByGroupAsc(page dbie.Page, group ...string) (dbie.Paginated[model.User], error) {
+	return g.Repo.SelectPage(page, "group", dbie.Nin, group, sortSelectByGroupNinOrderByGroupAscSetting...)
 }
 
 var sortSelectByGroupOrderByNameDescOrderByIDAscSetting = []dbie.Sort{

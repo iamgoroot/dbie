@@ -5,7 +5,8 @@ import (
 	"github.com/iamgoroot/dbie/core/test/model"
 )
 
-//go:generate dbietool -core=Bun,Gorm,Pg -consr=func
+//go:generate dbietool -core=Bun,Gorm,Pg -constr=factory
+
 type User interface {
 	dbie.Repo[model.User]
 	Init() error
@@ -15,6 +16,6 @@ type User interface {
 	SelectByGroupEq(string) ([]model.User, error)
 	SelectByGroup(dbie.Page, string) (items dbie.Paginated[model.User], err error)
 	SelectByGroupIn(dbie.Page, ...string) (items dbie.Paginated[model.User], err error)
-	SelectByGroupNin(dbie.Page, ...string) (items dbie.Paginated[model.User], err error)
+	SelectByGroupNinOrderByGroupAsc(dbie.Page, ...string) (items dbie.Paginated[model.User], err error)
 	SelectByGroupOrderByNameDescOrderByIDAsc(string) (model.User, error)
 }

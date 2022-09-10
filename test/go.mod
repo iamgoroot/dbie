@@ -7,7 +7,7 @@ replace (
 	github.com/iamgoroot/dbie/core/bun => ./../core/bun
 	github.com/iamgoroot/dbie/core/gorm => ./../core/gorm
 	github.com/iamgoroot/dbie/core/pg => ./../core/pg
-	//github.com/iamgoroot/dbie/core/bee => ./../core/bee
+//github.com/iamgoroot/dbie/core/bee => ./../core/bee
 )
 
 require (

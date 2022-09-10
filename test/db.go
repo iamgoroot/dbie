@@ -28,15 +28,6 @@ func makeBunSqlite(dsn string) *bun.DB {
 	return db
 }
 
-//func makePgSqlite(dsn string) *pg.DB {
-//	sqldb, _ := sql.Open(sqliteshim.DriverName(), dsn)
-//	db := bun.NewDB(sqldb, sqlitedialect.New())
-//	db.Exec("CREATE DATABASE repo;")
-//	db.NewDelete().Model(&model.User{}).Exec(context.Background())
-//	_, _ = db.NewCreateTable().Model(&model.User{}).Exec(context.Background())
-//	return db
-//}
-
 func makeGormSqlite(dsn string) *gorm.DB {
 	db, _ := gorm.Open(sqliteGorm.Open(dsn), &gorm.Config{})
 	db.AutoMigrate(&model.User{})
@@ -87,9 +78,9 @@ func makeGormPostgres(dsn string) *gorm.DB {
 
 // TODO: fix Mysql
 //func makeGormMysql(dsn string) *gorm.DB {
-//	db, err := gorm.Open(mysqlGorm.Open(dsn), &gorm.Config{})
-//	if err != nil {
-//		panic(err)
+//	db, Err := gorm.Open(mysqlGorm.Open(dsn), &gorm.Config{})
+//	if Err != nil {
+//		panic(Err)
 //	}
 //	db.AutoMigrate(&model.User{})
 //	db.Where("1 = 1").Delete(&model.User{})

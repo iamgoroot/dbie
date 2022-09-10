@@ -53,7 +53,7 @@ func (core Pg[Entity]) SelectPageCtx(
 		op = " IN (?)"
 		val = pg.In(val)
 	case dbie.Nin:
-		op = " NIN (?)"
+		op = " NOT IN (?)"
 		val = pg.In(val)
 	default:
 		op = operator.String()
