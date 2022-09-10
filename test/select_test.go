@@ -102,6 +102,14 @@ func TestSelect(t *testing.T) {
 	})
 }
 
+func TestSelectError(t *testing.T) {
+	testAllCores(t, func(t *testing.T, repo repo.User) {
+		data, err := repo.SelectPage(dbie.Page{}, `non existing field`, dbie.Gt, 5)
+		if err == nil {
+			t.Fatal("error expected", "got", data)
+		}
+	})
+}
 func TestSelectPageOrdered(t *testing.T) {
 	testAllCores(t, func(t *testing.T, repo repo.User) {
 		// Select Result users
@@ -112,7 +120,7 @@ func TestSelectPageOrdered(t *testing.T) {
 			dbie.Sort{Field: "group", Order: dbie.ASC},
 			dbie.Sort{Field: "name", Order: dbie.DESC},
 		)
-		checkResult(t, users, err).
+		check(t, users, err).
 			ExpectErr(nil).
 			ExpectPageAndSize(dbie.Page{Offset: 5, Limit: 10}, 20).
 			Iterate(func(prev, user model.User) {

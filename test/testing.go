@@ -57,7 +57,7 @@ func assertUser(t *testing.T, expected model.User, got model.User) {
 	}
 }
 
-func checkResult[T any](t *testing.T, paginated dbie.Paginated[T], err error) checker[T] {
+func check[T any](t *testing.T, paginated dbie.Paginated[T], err error) checker[T] {
 	return checker[T]{t, paginated, err}
 }
 
@@ -87,8 +87,9 @@ func (e checker[T]) ExpectErr(err error) checker[T] {
 	return e
 }
 
-func (e checker[T]) Expect(f func(c checker[T]) checker[T]) checker[T] {
-	return f(e)
+func (e checker[T]) Expect(f func(c checker[T])) checker[T] {
+	f(e)
+	return e
 }
 func (e checker[T]) Iterate(f func(prev T, current T)) checker[T] {
 	var prev T

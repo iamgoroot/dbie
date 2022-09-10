@@ -10,7 +10,7 @@ import (
 func TestGeneratedMethods(t *testing.T) {
 	testAllCores(t, func(t *testing.T, repo repo.User) {
 		users, err := repo.SelectByGroupIn(dbie.Page{Offset: 5, Limit: 10}, "group0", "group9")
-		checkResult(t, users, err).
+		check(t, users, err).
 			ExpectErr(nil).
 			ExpectPageAndSize(dbie.Page{Offset: 5, Limit: 10}, 20).
 			Iterate(func(_, user model.User) {
@@ -19,7 +19,7 @@ func TestGeneratedMethods(t *testing.T) {
 				}
 			})
 		users, err = repo.SelectByGroupNinOrderByGroupAsc(dbie.Page{Offset: 1, Limit: 70}, "group0", "group1")
-		checkResult(t, users, err).
+		check(t, users, err).
 			ExpectErr(nil).
 			ExpectPageAndSize(dbie.Page{Offset: 1, Limit: 70}, 80).
 			Iterate(func(prev, user model.User) {
