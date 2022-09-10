@@ -3,7 +3,6 @@ package test
 import (
 	"context"
 	"errors"
-	"fmt"
 	"github.com/iamgoroot/dbie"
 	"github.com/iamgoroot/dbie/core/test/model"
 	"github.com/iamgoroot/dbie/core/test/repo"
@@ -31,27 +30,24 @@ func TestSelectOne(t *testing.T) {
 }
 
 func testAllCores(t *testing.T, testFunc func(*testing.T, dbie.Repo[model.User])) {
-	makers := []interface {
-		NewUser(ctx context.Context) repo.User
-	}{
-		repo.Bun{DB: makeBunSqlite("file::memory:?")},
-		repo.Gorm{DB: makeGormSqlite("file::memory:?")},
-		repo.Bun{DB: makeBunPostgres("postgres://user:pass@127.0.0.1:5432/test?sslmode=disable")},
-		repo.Gorm{DB: makeGormPostgres("postgres://user:pass@127.0.0.1:5433/test?sslmode=disable")},
+	makers := map[string]func(ctx context.Context) repo.User{
+		"BunSqlite":    repo.Bun{DB: makeBunSqlite("file::memory:?")}.NewBunUser,
+		"GormSqlite":   repo.Gorm{DB: makeGormSqlite("file::memory:?")}.NewGormUser,
+		"BunPostgres":  repo.Bun{DB: makeBunPostgres("postgres://user:pass@127.0.0.1:5432/test?sslmode=disable")}.NewBunUser,
+		"GormPostgres": repo.Gorm{DB: makeGormPostgres("postgres://user:pass@127.0.0.1:5433/test?sslmode=disable")}.NewGormUser,
 		//repo.Gorm{DB: makeGormMysql("user:pass@tcp(localhost:3307)/test")},
 		//repo.Bun{DB: makeBunMysql("user:pass@tcp(localhost:3306)/test")},
 
 	}
-	for _, maker := range makers {
-		repo := maker.NewUser(context.Background())
+	for key, maker := range makers {
+		repo := maker(context.Background())
 		repo.Init()
 		err := repo.Insert(createUsers()...)
 		if err != nil {
 			t.Fatal(err)
 		}
 		defer repo.Close()
-		name := fmt.Sprintf("db[%s]", maker)
-		t.Run(name, func(t *testing.T) {
+		t.Run(key, func(t *testing.T) {
 			//t.Parallel()
 			testFunc(t, repo)
 		})
