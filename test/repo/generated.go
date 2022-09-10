@@ -2,9 +2,11 @@ package repo
 
 import (
 	"context"
+	"github.com/go-pg/pg/v10"
 	"github.com/iamgoroot/dbie"
 	coreBun "github.com/iamgoroot/dbie/core/bun"
 	coreGorm "github.com/iamgoroot/dbie/core/gorm"
+	corePg "github.com/iamgoroot/dbie/core/pg"
 	model "github.com/iamgoroot/dbie/core/test/model"
 	"github.com/uptrace/bun"
 	"gorm.io/gorm"
@@ -22,9 +24,15 @@ func (factory Gorm) NewGormUser(ctx context.Context) User {
 	return UserImpl{Repo: coreGorm.New[model.User](ctx, factory.DB)}
 }
 
+func (factory Pg) NewPgUser(ctx context.Context) User {
+	return UserImpl{Repo: corePg.New[model.User](ctx, factory.DB)}
+}
+
 type Bun struct{ *bun.DB }
 
 type Gorm struct{ *gorm.DB }
+
+type Pg struct{ *pg.DB }
 
 func (g UserImpl) SelectByGroup(page dbie.Page, group string) (dbie.Paginated[model.User], error) {
 	return g.Repo.SelectPage(page, "group", dbie.Eq, group)
@@ -38,8 +46,12 @@ func (g UserImpl) SelectByGroupIn(page dbie.Page, group ...string) (dbie.Paginat
 	return g.Repo.SelectPage(page, "group", dbie.In, group)
 }
 
-func (g UserImpl) SelectByGroupNin(page dbie.Page, group ...string) (dbie.Paginated[model.User], error) {
-	return g.Repo.SelectPage(page, "group", dbie.Nin, group)
+var sortSelectByGroupNinOrderByGroupAscSetting = []dbie.Sort{
+	{Field: `group`, Order: dbie.ASC},
+}
+
+func (g UserImpl) SelectByGroupNinOrderByGroupAsc(page dbie.Page, group ...string) (dbie.Paginated[model.User], error) {
+	return g.Repo.SelectPage(page, "group", dbie.Nin, group, sortSelectByGroupNinOrderByGroupAscSetting...)
 }
 
 var sortSelectByGroupOrderByNameDescOrderByIDAscSetting = []dbie.Sort{

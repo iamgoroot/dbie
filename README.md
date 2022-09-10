@@ -22,7 +22,7 @@ Easy:
 ## Usage
 
  ### Define database model
-As usually in bun, gorm or beego:
+As usually in bun, gorm or pg:
 ```golang
 type User struct {
 	ID       int

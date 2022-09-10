@@ -26,11 +26,11 @@ func (p Gorm[Entity]) Init() error {
 }
 
 func (p Gorm[Entity]) Close() error {
-	db, err := p.DB.DB()
-	if err != nil {
-		return err
+	if p.DB.Error != nil {
+		return p.DB.Error
 	}
-	return db.Close()
+	p.DB.AddError(fmt.Errorf("closed"))
+	return nil
 }
 
 func (p Gorm[Entity]) InsertCtx(ctx context.Context, items ...Entity) error {
@@ -60,8 +60,7 @@ func (p Gorm[Entity]) SelectPageCtx(
 			for i := 0; i < rv.Len(); i++ {
 				params = append(params, rv.Index(i).Interface())
 			}
-			err = selectQuery.Statement.Parse(&(items.Data))
-			if err != nil {
+			if err = selectQuery.Statement.Parse(&(items.Data)); err != nil {
 				return
 			}
 			whereStmt := fmt.Sprintf(`"%s"."%s" %s`, selectQuery.Statement.Schema.Table, field, operator)

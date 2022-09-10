@@ -3,6 +3,9 @@ package test
 import (
 	"context"
 	"database/sql"
+	"github.com/go-pg/pg/extra/pgdebug/v10"
+	"github.com/go-pg/pg/v10"
+	"github.com/go-pg/pg/v10/orm"
 	"github.com/iamgoroot/dbie/core/test/model"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
@@ -13,6 +16,7 @@ import (
 	pgGorm "gorm.io/driver/postgres"
 	sqliteGorm "gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"log"
 )
 
 func makeBunSqlite(dsn string) *bun.DB {
@@ -41,6 +45,21 @@ func makeBunPostgres(dsn string) *bun.DB {
 	_, _ = db.NewCreateTable().Model(&model.User{}).Exec(context.Background())
 	return db
 }
+
+func makePg(dsn string) *pg.DB {
+	opt, err := pg.ParseURL(dsn)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	db := pg.Connect(opt)
+	db.AddQueryHook(pgdebug.NewDebugHook())
+	db.Model(&model.User{}).Context(context.Background()).DropTable(&orm.DropTableOptions{Cascade: true})
+	err = db.Model(&model.User{}).Context(context.Background()).CreateTable(&orm.CreateTableOptions{FKConstraints: true})
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return db
+}
 func makeGormPostgres(dsn string) *gorm.DB {
 	db, _ := gorm.Open(pgGorm.Open(dsn), &gorm.Config{})
 	db.AutoMigrate(&model.User{})
@@ -59,9 +78,9 @@ func makeGormPostgres(dsn string) *gorm.DB {
 
 // TODO: fix Mysql
 //func makeGormMysql(dsn string) *gorm.DB {
-//	db, err := gorm.Open(mysqlGorm.Open(dsn), &gorm.Config{})
-//	if err != nil {
-//		panic(err)
+//	db, Err := gorm.Open(mysqlGorm.Open(dsn), &gorm.Config{})
+//	if Err != nil {
+//		panic(Err)
 //	}
 //	db.AutoMigrate(&model.User{})
 //	db.Where("1 = 1").Delete(&model.User{})
