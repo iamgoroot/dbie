@@ -36,21 +36,18 @@ func testAllCores(t *testing.T, testFunc func(*testing.T, dbie.Repo[model.User])
 		"BunPostgres":  repo.Bun{DB: makeBunPostgres("postgres://user:pass@127.0.0.1:5432/test?sslmode=disable")}.NewBunUser,
 		"GormPostgres": repo.Gorm{DB: makeGormPostgres("postgres://user:pass@127.0.0.1:5433/test?sslmode=disable")}.NewGormUser,
 		"PgPostgres":   repo.Pg{DB: makePg("postgres://user:pass@127.0.0.1:5434/test?sslmode=disable")}.NewPgUser,
-		//repo.Gorm{DB: makeGormMysql("user:pass@tcp(localhost:3307)/test")},
-		//repo.Bun{DB: makeBunMysql("user:pass@tcp(localhost:3306)/test")},
-
+		//TODO: "BeeGo":        repo.Bee{DB: makeGormMysql("user:pass@tcp(localhost:3307)/test")},
 	}
 	for key, maker := range makers {
-		repo := maker(context.Background())
-		repo.Init()
-		err := repo.Insert(createUsers()...)
+		userRepo := maker(context.Background())
+		userRepo.Init()
+		err := userRepo.Insert(createUsers()...)
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer repo.Close()
+		defer userRepo.Close()
 		t.Run(key, func(t *testing.T) {
-			//t.Parallel()
-			testFunc(t, repo)
+			testFunc(t, userRepo)
 		})
 	}
 }
