@@ -9,16 +9,18 @@ import (
 )
 
 type Bee[Entity any] struct {
-	core.GenericBackend[Entity]
 	context.Context
 	DB bee.Ormer
 }
 
-func New[Entity any](ctx context.Context, db bee.Ormer) dbie.Repo[Entity] {
-	return core.NewRepo[Entity](
-		Bee[Entity]{Context: ctx, DB: db},
-	)
+func (p Bee[Entity]) Close() error {
+	panic("implement me")
 }
+
+func New[Entity any](ctx context.Context, db bee.Ormer) dbie.Repo[Entity] {
+	return core.GenericBackend[Entity]{Bee[Entity]{Context: ctx, DB: db}}
+}
+
 func (p Bee[Entity]) Init() error {
 	var model Entity
 	orm.RegisterModel(model)

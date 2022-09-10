@@ -9,41 +9,38 @@ import (
 )
 
 type Bun[Entity any] struct {
-	core.GenericBackend[Entity]
 	context.Context
 	*bun.DB
 }
 
 func New[Entity any](ctx context.Context, db *bun.DB) dbie.Repo[Entity] {
-	return core.NewRepo[Entity](
-		Bun[Entity]{Context: ctx, DB: db},
-	)
+	return core.GenericBackend[Entity]{Core: Bun[Entity]{Context: ctx, DB: db}}
 }
 
-func (p Bun[Entity]) Init() error {
+func (core Bun[Entity]) Init() error {
 	var model Entity
-	return p.DB.ResetModel(p.Context, &model)
+	return core.DB.ResetModel(core.Context, &model)
 }
 
-func (p Bun[Entity]) InsertCtx(ctx context.Context, items ...Entity) error {
-	_, err := p.DB.NewInsert().Model(&items).Exec(ctx)
+func (core Bun[Entity]) InsertCtx(ctx context.Context, items ...Entity) error {
+	_, err := core.DB.NewInsert().Model(&items).Exec(ctx)
 	return dbie.Wrap(err)
 }
 
-func (p Bun[Entity]) Insert(items ...Entity) error {
-	return p.InsertCtx(p.Context, items...)
+func (core Bun[Entity]) Insert(items ...Entity) error {
+	return core.InsertCtx(core.Context, items...)
 }
 
-func (p Bun[Entity]) SelectPage(
+func (core Bun[Entity]) SelectPage(
 	page dbie.Page, field string, operator dbie.Op, val any, orders ...dbie.Sort,
 ) (dbie.Paginated[Entity], error) {
-	return p.SelectPageCtx(p.Context, page, field, operator, val, orders...)
+	return core.SelectPageCtx(core.Context, page, field, operator, val, orders...)
 }
 
-func (p Bun[Entity]) SelectPageCtx(
+func (core Bun[Entity]) SelectPageCtx(
 	ctx context.Context, page dbie.Page, field string, operator dbie.Op, val any, orders ...dbie.Sort,
 ) (items dbie.Paginated[Entity], err error) {
-	selectQuery := p.DB.NewSelect().Model(&(items.Data))
+	selectQuery := core.DB.NewSelect().Model(&(items.Data))
 	tableName := selectQuery.GetModel().(bun.TableModel).Table().Alias
 	var op string
 	switch operator {

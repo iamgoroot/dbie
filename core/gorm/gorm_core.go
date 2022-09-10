@@ -1,4 +1,4 @@
-package gorm
+package gormCore
 
 import (
 	"context"
@@ -10,16 +10,16 @@ import (
 )
 
 type Gorm[Entity any] struct {
-	core.GenericBackend[Entity]
 	context.Context
 	DB *gorm.DB
 }
 
 func New[Entity any](ctx context.Context, db *gorm.DB) dbie.Repo[Entity] {
-	return core.NewRepo[Entity](
+	return core.GenericBackend[Entity]{
 		Gorm[Entity]{Context: ctx, DB: db},
-	)
+	}
 }
+
 func (p Gorm[Entity]) Init() error {
 	var model Entity
 	return p.DB.WithContext(p.Context).AutoMigrate(&model)
