@@ -5,7 +5,7 @@ import (
 	"github.com/iamgoroot/dbie/core/test/model"
 )
 
-//go:generate dbietool -core=Bun,Gorm -consr=func
+//go:generate dbietool -core=Bun,Gorm,Pg -consr=func
 type User interface {
 	dbie.Repo[model.User]
 	Init() error

@@ -35,6 +35,7 @@ func testAllCores(t *testing.T, testFunc func(*testing.T, dbie.Repo[model.User])
 		"GormSqlite":   repo.Gorm{DB: makeGormSqlite("file::memory:?")}.NewGormUser,
 		"BunPostgres":  repo.Bun{DB: makeBunPostgres("postgres://user:pass@127.0.0.1:5432/test?sslmode=disable")}.NewBunUser,
 		"GormPostgres": repo.Gorm{DB: makeGormPostgres("postgres://user:pass@127.0.0.1:5433/test?sslmode=disable")}.NewGormUser,
+		"PgPostgres":   repo.Pg{DB: makePg("postgres://user:pass@127.0.0.1:5434/test?sslmode=disable")}.NewPgUser,
 		//repo.Gorm{DB: makeGormMysql("user:pass@tcp(localhost:3307)/test")},
 		//repo.Bun{DB: makeBunMysql("user:pass@tcp(localhost:3306)/test")},
 

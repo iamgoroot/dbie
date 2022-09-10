@@ -3,6 +3,9 @@ package test
 import (
 	"context"
 	"database/sql"
+	"github.com/go-pg/pg/extra/pgdebug/v10"
+	"github.com/go-pg/pg/v10"
+	"github.com/go-pg/pg/v10/orm"
 	"github.com/iamgoroot/dbie/core/test/model"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
@@ -13,6 +16,7 @@ import (
 	pgGorm "gorm.io/driver/postgres"
 	sqliteGorm "gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"log"
 )
 
 func makeBunSqlite(dsn string) *bun.DB {
@@ -23,6 +27,15 @@ func makeBunSqlite(dsn string) *bun.DB {
 	_, _ = db.NewCreateTable().Model(&model.User{}).Exec(context.Background())
 	return db
 }
+
+//func makePgSqlite(dsn string) *pg.DB {
+//	sqldb, _ := sql.Open(sqliteshim.DriverName(), dsn)
+//	db := bun.NewDB(sqldb, sqlitedialect.New())
+//	db.Exec("CREATE DATABASE repo;")
+//	db.NewDelete().Model(&model.User{}).Exec(context.Background())
+//	_, _ = db.NewCreateTable().Model(&model.User{}).Exec(context.Background())
+//	return db
+//}
 
 func makeGormSqlite(dsn string) *gorm.DB {
 	db, _ := gorm.Open(sqliteGorm.Open(dsn), &gorm.Config{})
@@ -39,6 +52,21 @@ func makeBunPostgres(dsn string) *bun.DB {
 	))
 	db.NewDelete().Model(&model.User{}).Exec(context.Background())
 	_, _ = db.NewCreateTable().Model(&model.User{}).Exec(context.Background())
+	return db
+}
+
+func makePg(dsn string) *pg.DB {
+	opt, err := pg.ParseURL(dsn)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	db := pg.Connect(opt)
+	db.AddQueryHook(pgdebug.NewDebugHook())
+	db.Model(&model.User{}).Context(context.Background()).DropTable(&orm.DropTableOptions{Cascade: true})
+	err = db.Model(&model.User{}).Context(context.Background()).CreateTable(&orm.CreateTableOptions{FKConstraints: true})
+	if err != nil {
+		log.Fatalln(err)
+	}
 	return db
 }
 func makeGormPostgres(dsn string) *gorm.DB {
