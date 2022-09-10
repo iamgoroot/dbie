@@ -22,6 +22,10 @@ func (core Bun[Entity]) Init() error {
 	return core.DB.ResetModel(core.Context, &model)
 }
 
+func (core Bun[Entity]) Close() error {
+	return core.DB.Close()
+}
+
 func (core Bun[Entity]) InsertCtx(ctx context.Context, items ...Entity) error {
 	_, err := core.DB.NewInsert().Model(&items).Exec(ctx)
 	return dbie.Wrap(err)

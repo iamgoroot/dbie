@@ -102,14 +102,6 @@ func TestSelect(t *testing.T) {
 	})
 }
 
-func TestSelectError(t *testing.T) {
-	testAllCores(t, func(t *testing.T, repo repo.User) {
-		data, err := repo.SelectPage(dbie.Page{}, `non existing field`, dbie.Gt, 5)
-		if err == nil {
-			t.Fatal("error expected", "got", data)
-		}
-	})
-}
 func TestSelectPageOrdered(t *testing.T) {
 	testAllCores(t, func(t *testing.T, repo repo.User) {
 		// Select Result users
@@ -156,5 +148,23 @@ func TestSelectNoRows(t *testing.T) {
 		if len(noUsers) != 0 {
 			t.Fatal("expected empty slice of users but got", noUsers)
 		}
+	})
+}
+
+func TestSelectError(t *testing.T) {
+	testAllCores(t, func(t *testing.T, repo repo.User) {
+		data, err := repo.SelectPage(dbie.Page{}, `non existing field`, dbie.Gt, 5)
+		if err == nil {
+			t.Fatal("error expected", "got", data)
+		}
+	})
+}
+func TestClose(t *testing.T) {
+	testAllCores(t, func(t *testing.T, repo repo.User) {
+		err := repo.Close()
+		if err != nil {
+			t.Fatal("no error expected")
+		}
+		_ = repo.Close()
 	})
 }

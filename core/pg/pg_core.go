@@ -23,6 +23,10 @@ func (core Pg[Entity]) Init() error {
 	return core.DB.Model(&model).CreateTable(&orm.CreateTableOptions{IfNotExists: true, FKConstraints: true})
 }
 
+func (core Pg[Entity]) Close() error {
+	return core.DB.Close()
+}
+
 func (core Pg[Entity]) InsertCtx(ctx context.Context, items ...Entity) error {
 	_, err := core.DB.Model(&items).Context(ctx).Insert()
 	return dbie.Wrap(err)

@@ -26,11 +26,10 @@ func (p Gorm[Entity]) Init() error {
 }
 
 func (p Gorm[Entity]) Close() error {
-	if db, err := p.DB.DB(); err != nil {
-		return err
-	} else if db != nil {
-		return db.Close()
+	if p.DB.Error != nil {
+		return p.DB.Error
 	}
+	p.DB.AddError(fmt.Errorf("closed"))
 	return nil
 }
 
