@@ -4,6 +4,7 @@
 
 dbie - (DB Interface Extension) generates database layer implementation by simply defining its interface.
 
+0. [Why?](#Why?)
 1. [Usage](#Usage)
    1. [Define database model](#Define database model)
    2. [Define repo interface](#Define repo interface)
@@ -13,6 +14,10 @@ dbie - (DB Interface Extension) generates database layer implementation by simpl
    1. [SelectBy*|FindBy*](#SelectBy*|FindBy*)
 3. [Custom methods](#Custom methods)
 
+## Why?
+Easy:
+   * You provide contract in form on an interface 
+   * Dbie provides an implementation for methods that match naming convention
 
 ## Usage
 
