@@ -16,15 +16,15 @@ type UserImpl struct {
 	dbie.Repo[model.User]
 }
 
-func (factory Bun) NewBunUser(ctx context.Context) User {
+func (factory Bun) NewUser(ctx context.Context) User {
 	return UserImpl{Repo: coreBun.New[model.User](ctx, factory.DB)}
 }
 
-func (factory Gorm) NewGormUser(ctx context.Context) User {
+func (factory Gorm) NewUser(ctx context.Context) User {
 	return UserImpl{Repo: coreGorm.New[model.User](ctx, factory.DB)}
 }
 
-func (factory Pg) NewPgUser(ctx context.Context) User {
+func (factory Pg) NewUser(ctx context.Context) User {
 	return UserImpl{Repo: corePg.New[model.User](ctx, factory.DB)}
 }
 

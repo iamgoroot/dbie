@@ -4,20 +4,19 @@
 
 dbie - (DB Interface Extension) generates database layer implementation by simply defining its interface.
 
-0. [Why?](#Why?)
-1. [Usage](#Usage)
+1. [Why?](#Why?)
+2. [Usage](#Usage)
    1. [Define database model](#Define database model)
    2. [Define repo interface](#Define repo interface)
-   3. [Generate repository implementation](#Generate repository implementation)
-   4. [Use generated repository](#Use generated repository)
-2. [Naming convention](#Naming convention)
+   3. [Generate implementation](#Generate implementation)
+   4. [Use](#Use)
+3. [Naming convention](#Naming convention)
    1. [SelectBy*|FindBy*](#SelectBy*|FindBy*)
-3. [Custom methods](#Custom methods)
+4. [Custom methods](#Custom methods)
 
 ## Why?
-Easy:
    * You provide contract in form on an interface 
-   * Dbie provides an implementation for methods that match naming convention
+   * Dbie provides an implementation for methods matching signature convention
 
 ## Usage
 
@@ -35,39 +34,63 @@ Define methods you want implemented by using [naming convention](#Naming convent
 wrappers for pagination (`dbie.Page` and `dbie.Paginated`)
 
 ```golang 
-// go:generate go run "github.com/iamgoroot/dbietool" -core=Bun,Gorm
-type UserRepo interface {
-	dbie.Repo[User] // add basic repo methods if needed
-	SelectByName(name string) ([]User, error)
-	SelectByID(ID int) (User, error)
-	FindBy(ID int) (User, error)
-	SelectByGroup(page dbie.Page, group string) (items dbie.Paginated[User], err error)
-	SelectByGroupIn(group ...string) (items dbie.Paginated[User], err error)
+//go:generate dbietool -core=Bun,Gorm,Pg -constr=factory
+
+type User interface {
+	dbie.Repo[model.User]
+	Init() error
+	SelectByName(string) ([]model.User, error)
+	SelectByID(int) (model.User, error)
+	FindByID(int) (model.User, error)
+	SelectByGroupEq(string) ([]model.User, error)
+	SelectByGroup(dbie.Page, string) (items dbie.Paginated[model.User], err error)
+	SelectByGroupIn(dbie.Page, ...string) (items dbie.Paginated[model.User], err error)
+	SelectByGroupNinOrderByGroupAsc(dbie.Page, ...string) (items dbie.Paginated[model.User], err error)
+	SelectByGroupOrderByNameDescOrderByIDAsc(string) (model.User, error)
 }
 
+
 ```
 
- ### Generate repository implementation
 
-```sh
-go generate ./...
+   ## Install or update
+   ``` bash
+   go get -u github.com/iamgoroot/dbietool
+   go install github.com/iamgoroot/dbietool
+   ```
+
+ ### Generate implementation
+   ```sh
+   go generate ./...
+   ```
+
+ ### Use
+
 ```
+func main() {
+	// instantiate (run dbietool with `-constr=func` parameter)
+	userRepo := repo.NewUser(context.Background())
+	
+	// insert user and handle error
+	err := userRepo.Insert(model.User{Name: "userName1"})
+	if err != nil {
+		log.Fatalln(err)
+	}
+	
+	// select user using generated method and handle error
+	user, err := userRepo.SelectByName("userName1")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	log.Println(user, err)
+}
+```
+Run dbietool with flag `-constr=factory` to generate factory objects instead of factory functions
 
- ### Use generated repository
-Enjoy generated implementation with repository factory (by default)
 ```golang
-factory := repo.Bun{DB: db}
-r := factory.NewUser(context.Background())
-r.SelectByName("John")
+   factory := repo.Bun[model.User]{DB: db}
+   userRepo := factory.NewUser(context.Background())
 ```
-Or run dbietool with flag `-constr=func` to use function constructors instead of factory
-
-```golang
-r := repo.NewUser(context.Background())
-r.SelectByName("John")
-```
-
-
 # Naming convention
 
 ## SelectBy*|FindBy*
