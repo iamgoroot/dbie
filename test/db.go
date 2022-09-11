@@ -13,6 +13,9 @@ import (
 	"github.com/uptrace/bun/driver/pgdriver"
 	"github.com/uptrace/bun/driver/sqliteshim"
 	"github.com/uptrace/bun/extra/bundebug"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 	pgGorm "gorm.io/driver/postgres"
 	sqliteGorm "gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -65,6 +68,22 @@ func makeGormPostgres(dsn string) *gorm.DB {
 	db.AutoMigrate(&model.User{})
 	db.Where("1 = 1").Delete(&model.User{})
 	return db
+}
+
+func makeMongo(dsn string) *mongo.Database {
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(dsn))
+	if err != nil {
+		panic(err)
+	}
+	if err := client.Ping(context.TODO(), readpref.Primary()); err != nil {
+		panic(err)
+	}
+	database := client.Database("test")
+	err = database.Drop(context.Background())
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return database
 }
 
 // TODO: fix Mysql
