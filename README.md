@@ -99,9 +99,7 @@ Can be used to select items by some criteria.
 
 ### Criteria
 For now only one criteria is supported per method. 
-For more complex queries create [custom method](#Custom methods) implementation
 
-```golang
 * {ColumnName} - part of function name, specifically db column name but CamelCase instead of snake_case
 * {?Operator} - SQL operator. 
   * `dbie.Eq` if omitted. 
