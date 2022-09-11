@@ -55,11 +55,10 @@ type User interface {
 	SelectByGroupNinOrderByGroupAsc(dbie.Page, ...string) (items dbie.Paginated[model.User], err error)
 	SelectByGroupOrderByNameDescOrderByIDAsc(string) (model.User, error)
 }
-
-
 ```
 
 ### Generate
+That's it. generate code
    ```sh
    go generate ./...
    ```
