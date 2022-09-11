@@ -4,15 +4,15 @@
 
 dbie - (DB Interface Extension) generates database layer implementation by simply defining its interface.
 
-1. [Why?](#Why?)
-2. [Getting started](#Getting started)
-3. [Install](#Install generator tool)
-4. [Define contracts](#Define contracts)
-5. [Usage](#Usage)
-6. [Naming convention](#Naming convention)
-7. [SelectBy*|FindBy*](#SelectBy*|FindBy*)
-8. [Sort order](#Sort order)
-9. [Custom methods](#Custom methods)
+1. [Why?](#why?)
+2. [Getting started](#getting-started)
+   1. [Install](#install-generator-tool)
+   2. [Define contracts](#define-contracts)
+   3. [Usage](#Usage)
+3. [Naming convention](#naming-convention)
+   7. [SelectBy*|FindBy*](#SelectBy*|FindBy*)
+   8. [Sort order](#sort-order)
+4. [Custom methods](#custom-methods)
 
 ## Why?
    * You provide contract in form on an interface 
