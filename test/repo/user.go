@@ -5,7 +5,7 @@ import (
 	"github.com/iamgoroot/dbie/core/test/model"
 )
 
-//go:generate github.com/iamgoroot/dbietool -core=Bun,Gorm,Pg -constr=factory
+//go:generate dbietool -core=Bun,Gorm,Pg -constr=factory
 
 type User interface {
 	dbie.Repo[model.User]

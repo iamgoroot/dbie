@@ -60,11 +60,10 @@ jobs:
           check-latest: true
       - name: Install tool
         run: |
-          go get -u github.com/iamgoroot/dbietool
-          go install github.com/iamgoroot/dbietool
+          cd test && go get -u github.com/iamgoroot/dbietool && go install github.com/iamgoroot/dbietool
       - name: Generate
         run: |
-          go generate ./...
+          cd test/repo && go generate ./...
       - name: Build
         run: go build .
       - name: Test root package coverage
