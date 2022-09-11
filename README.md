@@ -5,23 +5,29 @@
 dbie - (DB Interface Extension) generates database layer implementation by simply defining its interface.
 
 1. [Why?](#Why?)
-2. [Usage](#Usage)
-   1. [Define database model](#Define database model)
-   2. [Define repo interface](#Define repo interface)
-   3. [Install or update](#Install or update)
-   4. [Generate implementation](#Generate implementation)
-   5. [Use](#Use)
-3. [Naming convention](#Naming convention)
-   1. [SelectBy*|FindBy*](#SelectBy*|FindBy*)
-4. [Custom methods](#Custom methods)
+2. [Getting started](#Getting started)
+3. [Install](#Install generator tool)
+4. [Define contracts](#Define contracts)
+5. [Usage](#Usage)
+6. [Naming convention](#Naming convention)
+7. [SelectBy*|FindBy*](#SelectBy*|FindBy*)
+8. [Sort order](#Sort order)
+9. [Custom methods](#Custom methods)
 
 ## Why?
    * You provide contract in form on an interface 
    * Dbie provides an implementation for methods matching signature convention
 
-## Usage
+## Getting started
 
-### Define database model
+### Install generator tool
+```sh
+   go get -u github.com/iamgoroot/dbietool
+   go install github.com/iamgoroot/dbietool
+```
+### Define contracts
+#### Define model
+
 As usually in bun, gorm or pg:
 ```golang
 type User struct {
@@ -30,7 +36,7 @@ type User struct {
 	Group    string
 }
 ```
-### Define repo interface
+#### Define repository interface
 Define methods you want implemented by using [naming convention](#Naming convention) and use
 wrappers for pagination (`dbie.Page` and `dbie.Paginated`)
 
@@ -53,19 +59,12 @@ type User interface {
 
 ```
 
-
-## Install or update
-   ``` bash
-   go get -u github.com/iamgoroot/dbietool
-   go install github.com/iamgoroot/dbietool
-   ```
-
-### Generate implementation
+### Generate
    ```sh
    go generate ./...
    ```
 
-### Use
+### Usage
 
 ```
 func main() {
@@ -125,7 +124,7 @@ func SelectBy{ColumnName}{?Operator}( {columnName} {columnType} ) (dbie.Paginate
 
 
 
-### Ordering:
+### Sort order
 
 * {OrderColumnName} - ColumnName to order by in CamelCase.
 * {?SortOrder} - Asc or Desc
