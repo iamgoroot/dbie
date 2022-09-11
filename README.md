@@ -8,8 +8,9 @@ dbie - (DB Interface Extension) generates database layer implementation by simpl
 2. [Usage](#Usage)
    1. [Define database model](#Define database model)
    2. [Define repo interface](#Define repo interface)
-   3. [Generate implementation](#Generate implementation)
-   4. [Use](#Use)
+   3. [Install or update](#Install or update)
+   4. [Generate implementation](#Generate implementation)
+   5. [Use](#Use)
 3. [Naming convention](#Naming convention)
    1. [SelectBy*|FindBy*](#SelectBy*|FindBy*)
 4. [Custom methods](#Custom methods)
@@ -20,7 +21,7 @@ dbie - (DB Interface Extension) generates database layer implementation by simpl
 
 ## Usage
 
- ### Define database model
+### Define database model
 As usually in bun, gorm or pg:
 ```golang
 type User struct {
@@ -29,7 +30,7 @@ type User struct {
 	Group    string
 }
 ```
- ### Define repo interface
+### Define repo interface
 Define methods you want implemented by using [naming convention](#Naming convention) and use
 wrappers for pagination (`dbie.Page` and `dbie.Paginated`)
 
@@ -53,18 +54,18 @@ type User interface {
 ```
 
 
-   ## Install or update
+## Install or update
    ``` bash
    go get -u github.com/iamgoroot/dbietool
    go install github.com/iamgoroot/dbietool
    ```
 
- ### Generate implementation
+### Generate implementation
    ```sh
    go generate ./...
    ```
 
- ### Use
+### Use
 
 ```
 func main() {
@@ -107,7 +108,7 @@ For now only one criteria is supported per method.
   `"Eq" (default), "Neq", "Gt", "Gte", "Lt", "Lte", "Like", "Ilike", "Nlike", "Nilike", "In", "Nin", "Is", "Not"`
 * {columnName} - columnName in camelCase.
 * {columnType} - type of parameter as golang type
-* Supported return types:
+* Supported return types: 
   * MODEL - returns one item 
   * []MODEL - returns slice of resulting items
   * dbie.Paginated[MODEL] - returns paginated wrapper with resulting items
