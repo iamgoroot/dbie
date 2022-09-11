@@ -10,8 +10,8 @@ dbie - (DB Interface Extension) generates database layer implementation by simpl
    2. [Define contracts](#define-contracts)
    3. [Usage](#Usage)
 3. [Naming convention](#naming-convention)
-   7. [SelectBy*|FindBy*](#SelectBy*|FindBy*)
-   8. [Sort order](#sort-order)
+   1. [SelectBy*|FindBy*](#SelectBy*|FindBy*)
+   2. [Sort order](#sort-order)
 4. [Custom methods](#custom-methods)
 
 ## Why?
