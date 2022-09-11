@@ -87,14 +87,10 @@ func (core Mongo[Entity]) conv(entities ...Entity) []interface{} {
 
 func op(dbOp dbie.Op, field string, val any) any {
 	switch dbOp {
-	case dbie.In:
-		return bson.M{field: bson.M{"$in": val, "$exists": true}}
-	case dbie.Nin:
-		return bson.D{{field, bson.D{{"$nin", val}, {"$exists", true}}}}
 	case dbie.Eq:
 		return bson.D{{field, val}}
 	case dbie.Neq:
-		return bson.D{{field, bson.D{{"$ne", val}, {"$exists", true}}}}
+		return bson.D{{field, bson.M{"$ne": val, "$exists": true}}}
 	case dbie.Gt:
 		return bson.D{{field, bson.D{{"$gt", val}, {"$exists", true}}}}
 	case dbie.Gte:
@@ -104,9 +100,17 @@ func op(dbOp dbie.Op, field string, val any) any {
 	case dbie.Lte:
 		return bson.D{{field, bson.D{{"$lte", val}}}}
 	case dbie.Like:
-		return bson.D{{field, bson.D{{"$regex", val}}}}
+		return bson.D{{field, bson.M{"$regex": val}}}
+	case dbie.Ilike:
+		return bson.D{{field, bson.M{"$regex": val, "$options": "i"}}}
 	case dbie.Nlike:
-		return bson.D{{field, bson.D{{"$not", bson.D{{"$regex", val}}}}}}
+		return bson.D{{field, bson.M{"$not": bson.M{"$regex": val}}}}
+	case dbie.Nilike:
+		return bson.D{{field, bson.M{"$not": bson.M{"$regex": val, "$options": "i"}}}}
+	case dbie.In:
+		return bson.D{{field, bson.M{"$in": val, "$exists": true}}}
+	case dbie.Nin:
+		return bson.D{{field, bson.M{"$nin": val, "$exists": true}}}
 	default:
 		return bson.D{}
 	}
