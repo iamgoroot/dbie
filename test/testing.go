@@ -11,11 +11,11 @@ import (
 
 func testAllCores(t *testing.T, testFunc func(*testing.T, repo.User)) {
 	makers := map[string]func(ctx context.Context) repo.User{
-		"BunSqlite":    repo.Bun{DB: makeBunSqlite("file::memory:?")}.NewBunUser,
-		"BunPostgres":  repo.Bun{DB: makeBunPostgres("postgres://user:pass@127.0.0.1:5432/test?sslmode=disable")}.NewBunUser,
-		"GormSqlite":   repo.Gorm{DB: makeGormSqlite("file::memory:?")}.NewGormUser,
-		"GormPostgres": repo.Gorm{DB: makeGormPostgres("postgres://user:pass@127.0.0.1:5433/test?sslmode=disable")}.NewGormUser,
-		"PgPostgres":   repo.Pg{DB: makePg("postgres://user:pass@127.0.0.1:5434/test?sslmode=disable")}.NewPgUser,
+		"BunSqlite":    repo.Bun{DB: makeBunSqlite("file::memory:?")}.NewUser,
+		"BunPostgres":  repo.Bun{DB: makeBunPostgres("postgres://user:pass@127.0.0.1:5432/test?sslmode=disable")}.NewUser,
+		"GormSqlite":   repo.Gorm{DB: makeGormSqlite("file::memory:?")}.NewUser,
+		"GormPostgres": repo.Gorm{DB: makeGormPostgres("postgres://user:pass@127.0.0.1:5433/test?sslmode=disable")}.NewUser,
+		"PgPostgres":   repo.Pg{DB: makePg("postgres://user:pass@127.0.0.1:5434/test?sslmode=disable")}.NewUser,
 		//TODO: "BeeGo":        repo.Bee{DB: makeGormMysql("user:pass@tcp(localhost:3307)/test")},
 	}
 	for key, maker := range makers {

@@ -4,20 +4,19 @@
 
 dbie - (DB Interface Extension) generates database layer implementation by simply defining its interface.
 
-0. [Why?](#Why?)
-1. [Usage](#Usage)
+1. [Why?](#Why?)
+2. [Usage](#Usage)
    1. [Define database model](#Define database model)
    2. [Define repo interface](#Define repo interface)
-   3. [Generate repository implementation](#Generate repository implementation)
-   4. [Use generated repository](#Use generated repository)
-2. [Naming convention](#Naming convention)
+   3. [Generate implementation](#Generate implementation)
+   4. [Use](#Use)
+3. [Naming convention](#Naming convention)
    1. [SelectBy*|FindBy*](#SelectBy*|FindBy*)
-3. [Custom methods](#Custom methods)
+4. [Custom methods](#Custom methods)
 
 ## Why?
-Easy:
    * You provide contract in form on an interface 
-   * Dbie provides an implementation for methods that match naming convention
+   * Dbie provides an implementation for methods matching signature convention
 
 ## Usage
 
@@ -53,13 +52,19 @@ type User interface {
 
 ```
 
- ### Generate repository implementation
 
-```sh
-go generate ./...
-```
+   ## Install or update
+   ``` bash
+   go get -u github.com/iamgoroot/dbietool
+   go install github.com/iamgoroot/dbietool
+   ```
 
- ### Use generated repository
+ ### Generate implementation
+   ```sh
+   go generate ./...
+   ```
+
+ ### Use
 
 ```
 func main() {
