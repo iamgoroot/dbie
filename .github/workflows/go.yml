@@ -53,8 +53,7 @@ jobs:
           --health-retries 5
       mongo:
         image: mongo
-        restart: always
-        environment:
+        env:
           MONGO_INITDB_ROOT_USERNAME: user
           MONGO_INITDB_ROOT_PASSWORD: pass
         ports:
