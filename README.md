@@ -4,23 +4,30 @@
 
 dbie - (DB Interface Extension) generates database layer implementation by simply defining its interface.
 
-1. [Why?](#Why?)
-2. [Usage](#Usage)
-   1. [Define database model](#Define database model)
-   2. [Define repo interface](#Define repo interface)
-   3. [Generate implementation](#Generate implementation)
-   4. [Use](#Use)
-3. [Naming convention](#Naming convention)
+1. [Why?](#why?)
+2. [Getting started](#getting-started)
+   1. [Install](#install-generator-tool)
+   2. [Define contracts](#define-contracts)
+   3. [Usage](#Usage)
+3. [Naming convention](#naming-convention)
    1. [SelectBy*|FindBy*](#SelectBy*|FindBy*)
-4. [Custom methods](#Custom methods)
+   2. [Sort order](#sort-order)
+4. [Custom methods](#custom-methods)
 
 ## Why?
    * You provide contract in form on an interface 
    * Dbie provides an implementation for methods matching signature convention
 
-## Usage
+## Getting started
 
- ### Define database model
+### Install generator tool
+```sh
+   go get -u github.com/iamgoroot/dbietool
+   go install github.com/iamgoroot/dbietool
+```
+### Define contracts
+#### Define model
+
 As usually in bun, gorm or pg:
 ```golang
 type User struct {
@@ -29,7 +36,7 @@ type User struct {
 	Group    string
 }
 ```
- ### Define repo interface
+#### Define repository interface
 Define methods you want implemented by using [naming convention](#Naming convention) and use
 wrappers for pagination (`dbie.Page` and `dbie.Paginated`)
 
@@ -48,23 +55,15 @@ type User interface {
 	SelectByGroupNinOrderByGroupAsc(dbie.Page, ...string) (items dbie.Paginated[model.User], err error)
 	SelectByGroupOrderByNameDescOrderByIDAsc(string) (model.User, error)
 }
-
-
 ```
 
-
-   ## Install or update
-   ``` bash
-   go get -u github.com/iamgoroot/dbietool
-   go install github.com/iamgoroot/dbietool
-   ```
-
- ### Generate implementation
+### Generate
+That's it. generate code
    ```sh
    go generate ./...
    ```
 
- ### Use
+### Usage
 
 ```
 func main() {
@@ -107,7 +106,7 @@ For now only one criteria is supported per method.
   `"Eq" (default), "Neq", "Gt", "Gte", "Lt", "Lte", "Like", "Ilike", "Nlike", "Nilike", "In", "Nin", "Is", "Not"`
 * {columnName} - columnName in camelCase.
 * {columnType} - type of parameter as golang type
-* Supported return types:
+* Supported return types: 
   * MODEL - returns one item 
   * []MODEL - returns slice of resulting items
   * dbie.Paginated[MODEL] - returns paginated wrapper with resulting items
@@ -124,7 +123,7 @@ func SelectBy{ColumnName}{?Operator}( {columnName} {columnType} ) (dbie.Paginate
 
 
 
-### Ordering:
+### Sort order
 
 * {OrderColumnName} - ColumnName to order by in CamelCase.
 * {?SortOrder} - Asc or Desc
