@@ -15,8 +15,9 @@ dbie - (DB Interface Extension) generates database layer implementation by simpl
 4. [Custom methods](#custom-methods)
 
 ## Why?
-   * You provide contract in form on an interface 
-   * Dbie provides an implementation for methods matching signature convention
+
+* You provide contract in form on an interface
+* Dbie provides an implementation (gorm, bun, mongo, go-pg) for methods matching signature convention
 
 ## Getting started
 
@@ -28,7 +29,7 @@ dbie - (DB Interface Extension) generates database layer implementation by simpl
 ### Define contracts
 #### Define model
 
-As usually in bun, gorm or pg:
+As usually in Bun, Gorm, go-pg or Mongo (tag `bson`):
 ```golang
 type User struct {
 	ID       int

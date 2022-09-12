@@ -54,6 +54,20 @@ func (core Bun[Entity]) SelectPageCtx(
 	case dbie.Nin:
 		op = " NOT IN (?)"
 		val = bun.In(val)
+	case dbie.Ilike:
+		if core.DB.Dialect().Name().String() == "sqlite" {
+			selectQuery.DB().Exec("PRAGMA case_sensitive_like = false;")
+			op = " LIKE ?"
+			break
+		}
+		fallthrough
+	case dbie.Nilike:
+		if core.DB.Dialect().Name().String() == "sqlite" {
+			selectQuery.DB().Exec("PRAGMA case_sensitive_like = false;")
+			op = " NOT LIKE ?"
+			break
+		}
+		fallthrough
 	default:
 		op = operator.String()
 	}
