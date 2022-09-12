@@ -2,7 +2,6 @@ package test
 
 import (
 	"github.com/iamgoroot/dbie"
-	"github.com/iamgoroot/dbie/core/test/model"
 	"github.com/iamgoroot/dbie/core/test/repo"
 	"testing"
 )
@@ -42,10 +41,7 @@ func TestOperators(t *testing.T) {
 		for op, expect := range ops {
 			t.Run(expect.Name, func(t *testing.T) {
 				res, err := repo.SelectPage(expect.Page, "name", op, expect.QueryArgs)
-				check(t, res, err).
-					Expect(func(checker2 checker[model.User]) {
-						t.Log(res)
-					}).ExpectPageAndSize(expect.Page, expect.Count)
+				check(t, res, err).ExpectPageAndSize(expect.Page, expect.Count)
 
 			})
 		}
