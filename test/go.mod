@@ -35,7 +35,7 @@ require (
 	github.com/go-pg/zerochecker v0.2.0 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/google/uuid v1.3.0 // indirect
-	github.com/iamgoroot/dbietool v0.0.0-20220910234001-5b9c24397d47 // indirect
+	github.com/iamgoroot/dbietool v0.0.0-20220912013132-99d8e85467f5 // indirect
 	github.com/iamgoroot/merge v0.0.0-20220619000559-5331410dde5e // indirect
 	github.com/iancoleman/strcase v0.2.0 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
