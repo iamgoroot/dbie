@@ -14,6 +14,10 @@ require (
 	github.com/go-pg/pg/extra/pgdebug/v10 v10.10.6
 	github.com/go-pg/pg/v10 v10.10.6
 	github.com/iamgoroot/dbie v0.0.0-00010101000000-000000000000
+	github.com/iamgoroot/dbie/core/bun v0.0.0-00010101000000-000000000000
+	github.com/iamgoroot/dbie/core/gorm v0.0.0-00010101000000-000000000000
+	github.com/iamgoroot/dbie/core/mongo v0.0.0-00010101000000-000000000000
+	github.com/iamgoroot/dbie/core/pg v0.0.0-00010101000000-000000000000
 	github.com/uptrace/bun v1.1.8
 	github.com/uptrace/bun/dialect/pgdialect v1.1.8
 	github.com/uptrace/bun/dialect/sqlitedialect v1.1.8
@@ -31,10 +35,6 @@ require (
 	github.com/go-pg/zerochecker v0.2.0 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/google/uuid v1.3.0 // indirect
-	github.com/iamgoroot/dbie/core/bun v0.0.0-00010101000000-000000000000 // indirect
-	github.com/iamgoroot/dbie/core/gorm v0.0.0-00010101000000-000000000000 // indirect
-	github.com/iamgoroot/dbie/core/mongo v0.0.0-00010101000000-000000000000 // indirect
-	github.com/iamgoroot/dbie/core/pg v0.0.0-00010101000000-000000000000 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.12.1 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
