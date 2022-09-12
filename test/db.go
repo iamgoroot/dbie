@@ -55,7 +55,9 @@ func makePg(dsn string) *pg.DB {
 		log.Fatalln(err)
 	}
 	db := pg.Connect(opt)
-	db.AddQueryHook(pgdebug.NewDebugHook())
+	db.AddQueryHook(&pgdebug.DebugHook{
+		Verbose: true,
+	})
 	db.Model(&model.User{}).Context(context.Background()).DropTable(&orm.DropTableOptions{Cascade: true})
 	err = db.Model(&model.User{}).Context(context.Background()).CreateTable(&orm.CreateTableOptions{FKConstraints: true})
 	if err != nil {
@@ -63,6 +65,7 @@ func makePg(dsn string) *pg.DB {
 	}
 	return db
 }
+
 func makeGormPostgres(dsn string) *gorm.DB {
 	db, _ := gorm.Open(pgGorm.Open(dsn), &gorm.Config{})
 	db.AutoMigrate(&model.User{})

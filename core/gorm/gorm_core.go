@@ -53,6 +53,22 @@ func (p Gorm[Entity]) SelectPageCtx(
 ) (items dbie.Paginated[Entity], err error) {
 	selectQuery := p.DB.Model(&(items.Data)).WithContext(ctx)
 	switch operator {
+	case dbie.Not, dbie.Is:
+		selectQuery = selectQuery.Where(fmt.Sprint(field, operator))
+	case dbie.Ilike:
+		if p.DB.Name() == "sqlite" {
+			selectQuery.Select("PRAGMA case_sensitive_like = false;")
+			selectQuery = selectQuery.Where(fmt.Sprint(field, " LIKE ?"), val)
+			break
+		}
+		fallthrough
+	case dbie.Nilike:
+		if p.DB.Name() == "sqlite" {
+			selectQuery.Select("PRAGMA case_sensitive_like = false;")
+			selectQuery = selectQuery.Where(fmt.Sprint(field, " NOT LIKE ?"), val)
+			break
+		}
+		fallthrough
 	case dbie.In, dbie.Nin:
 		var params []interface{}
 		rv := reflect.ValueOf(val)

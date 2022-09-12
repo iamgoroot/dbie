@@ -90,7 +90,7 @@ func op(dbOp dbie.Op, field string, val any) any {
 	case dbie.Eq:
 		return bson.D{{field, val}}
 	case dbie.Neq:
-		return bson.D{{field, bson.M{"$ne": val, "$exists": true}}}
+		return bson.D{{field, bson.M{"$ne": val}}}
 	case dbie.Gt:
 		return bson.D{{field, bson.M{"$gt": val, "$exists": true}}}
 	case dbie.Gte:
@@ -108,13 +108,13 @@ func op(dbOp dbie.Op, field string, val any) any {
 	case dbie.Nilike:
 		return bson.D{{field, bson.M{"$not": bson.M{"$regex": val, "$options": "i"}}}}
 	case dbie.In:
-		return bson.D{{field, bson.M{"$in": val, "$exists": true}}}
+		return bson.M{field: bson.M{"$in": val, "$exists": true}}
 	case dbie.Nin:
-		return bson.D{{field, bson.M{"$nin": val, "$exists": true}}}
+		return bson.M{field: bson.M{"$nin": val, "$exists": true}}
 	case dbie.Is:
-		return bson.D{{field, bson.M{"$exists": true}}}
-	case dbie.Not:
 		return bson.D{{field, bson.M{"$exists": false}}}
+	case dbie.Not:
+		return bson.D{{field, bson.M{"$exists": true}}}
 	default:
 		return bson.D{}
 	}

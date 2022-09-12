@@ -12,8 +12,8 @@ import (
 func testAllCores(t *testing.T, testFunc func(*testing.T, repo.User)) {
 	makers := map[string]func(ctx context.Context) repo.User{
 		"BunSqlite":    repo.Bun{DB: makeBunSqlite("file::memory:?")}.NewUser,
-		"BunPostgres":  repo.Bun{DB: makeBunPostgres("postgres://user:pass@127.0.0.1:5432/test?sslmode=disable")}.NewUser,
 		"GormSqlite":   repo.Gorm{DB: makeGormSqlite("file::memory:?")}.NewUser,
+		"BunPostgres":  repo.Bun{DB: makeBunPostgres("postgres://user:pass@127.0.0.1:5432/test?sslmode=disable")}.NewUser,
 		"GormPostgres": repo.Gorm{DB: makeGormPostgres("postgres://user:pass@127.0.0.1:5433/test?sslmode=disable")}.NewUser,
 		"PgPostgres":   repo.Pg{DB: makePg("postgres://user:pass@127.0.0.1:5434/test?sslmode=disable")}.NewUser,
 		"Mongo":        repo.Mongo{DB: makeMongo("mongodb://user:pass@127.0.0.1:27017/?maxPoolSize=20&w=majority")}.NewUser,
