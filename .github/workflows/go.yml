@@ -67,7 +67,7 @@ jobs:
           mongodb-db: test
       - name: Install tool
         run: |
-          cd test && go get -u github.com/iamgoroot/dbietool && go install github.com/iamgoroot/dbietool
+          cd test && go get -u github.com/iamgoroot/dbietool@latest && go install github.com/iamgoroot/dbietool
       - name: Generate
         run: |
           cd test/repo && go generate ./...
