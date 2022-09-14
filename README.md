@@ -2,42 +2,68 @@
 
 [![codecov](https://codecov.io/gh/iamgoroot/dbie/branch/main/graph/badge.svg?token=HDGXEOT8BA)](https://codecov.io/gh/iamgoroot/dbie)
 
-dbie - (DB Interface Extension) generates database layer implementation by simply defining its interface.
+dbie - (DB Interface Extension) Golang database layer for lazy gophers
 
-1. [Why?](#why?)
-2. [Getting started](#getting-started)
-   1. [Install](#install-generator-tool)
-   2. [Define contracts](#define-contracts)
-   3. [Usage](#Usage)
-3. [Naming convention](#naming-convention)
-   1. [SelectBy*|FindBy*](#SelectBy*|FindBy*)
-   2. [Sort order](#sort-order)
-4. [Custom methods](#custom-methods)
+#### Long story short:
 
-## Why?
+* You [provide an interface](#define-repository-interface) of database layer using **models** from your orm
+  library ([Go-pg](https://github.com/go-pg/pg), [Gorm](https://gorm.io/), [Bun](https://bun.uptrace.dev/)
+  , [mongo](https://github.com/mongodb/mongo-go-driver) etc...)
+* dbie **generates an implementation of that interface** for matching methods
+* You can implement [custom method](#custom-methods) yourself if you need
 
-* You provide contract in form on an interface
-* Dbie provides an implementation (gorm, bun, mongo, go-pg) for methods matching signature convention
+1. [Why it might be good?](#why-it-might-be-good)
+2. [Why not sqlc?](#why-not-sqlc?)
+3. [What's missing](#what's-missing?)
+4. [Getting started](#getting-started)
+    1. [Install](#install-generator-tool)
+    2. [Define contracts](#define-model)
+    3. [Usage](#Usage)
+5. [SelectBy*|FindBy*](#SelectBy*|FindBy*)
+6. [Sort order](#sort-order)
+7. [Custom methods](#custom-methods)
+
+## Why it might be good?
+
+* You do mostly brain-dead simple db queries ([Go-pg](https://github.com/go-pg/pg), [Gorm](https://gorm.io/)
+  , [Bun](https://bun.uptrace.dev/), [mongo](https://github.com/mongodb/mongo-go-driver) etc...)
+* It's a nice **addition to orm** you might already use - use pagination, sorting, filtering with
+* No query pieces all over your code - **go code first**
+* dbietool generates '**just enough**' code **to satisfy the interface** - for less clutter
+* Generate and forget - **maintain your models** and dbie will translate the rest
+
+## Why not sqlc?
+
+bdie is different in a few ways so might not be for you depending on your use case or preferences
+
+* **Go code first** approach
+* **MongoDB** support
+* dbie is **not a code generator**, it's a library - you don't necessarily have to generate any code (it's just your
+  convenience)
+
+## What's missing?
+
+* No **Transactions** - but you can them implement as [custom method](#custom-methods) with your orm library
+* No **Joins** - but [custom method](#custom-methods) again
+
+#### But... I want to define interfaces at layer where I use them!
+
+...And I encourage you to do so!
+
+* Use interface as blueprint for your dbie implementation in database layer
+* Define small interfaces in your service layer exactly where you need them (it's golang after all)
 
 ## Getting started
 
 ### Install generator tool
+
 ```sh
    go get -u github.com/iamgoroot/dbietool
    go install github.com/iamgoroot/dbietool
 ```
-### Define contracts
-#### Define model
 
-As usually in Bun, Gorm, go-pg or Mongo (tag `bson`):
-```golang
-type User struct {
-	ID       int
-	Name     string
-	Group    string
-}
-```
-#### Define repository interface
+### Define repository interface
+
 Define methods you want implemented by using [naming convention](#Naming convention) and use
 wrappers for pagination (`dbie.Page` and `dbie.Paginated`)
 
@@ -58,15 +84,29 @@ type User interface {
 }
 ```
 
+### Define model
+
+As usually in Bun, Gorm, go-pg or Mongo (tag `bson`):
+
+```golang
+type User struct {
+	ID       int
+	Name     string
+	Group    string
+}
+```
+
 ### Generate
+
 That's it. generate code
+
    ```sh
    go generate ./...
    ```
 
 ### Usage
 
-```
+```golang
 func main() {
 	// instantiate (run dbietool with `-constr=func` parameter)
 	userRepo := repo.NewUser(context.Background())
@@ -91,7 +131,7 @@ Run dbietool with flag `-constr=factory` to generate factory objects instead of 
    factory := repo.Bun[model.User]{DB: db}
    userRepo := factory.NewUser(context.Background())
 ```
-# Naming convention
+
 
 ## SelectBy*|FindBy*
 
@@ -121,9 +161,6 @@ func SelectBy{ColumnName}{?Operator}( {columnName} {columnType} ) ([]MODEL, erro
 func SelectBy{ColumnName}{?Operator}( {columnName} {columnType} ) (dbie.Paginated[MODEL], error) // returns slice wrapper with pagination or error
 ```
 
-
-
-
 ### Sort order
 
 * {OrderColumnName} - ColumnName to order by in CamelCase.
@@ -136,8 +173,28 @@ func SelectByColumnNameOrderBy{OrderColumnName}{?SortOrder}{ColumnName2}{?Order2
 
 ```
 
-
 # Custom methods
 
 1. Create separate file in same package as repo implementation
 2. Create method with desired signature that does start with SelectBy* or FindBy*
+
+# Docs and Links
+
+Mongo:
+
+* https://github.com/mongodb/mongo-go-driver
+
+Bun:
+
+* https://bun.uptrace.dev/guide/golang-orm.html
+* https://github.com/uptrace/bun
+
+Gorm:
+
+* https://gorm.io/docs/
+* https://github.com/go-gorm/gorm
+
+go-pg:
+
+* https://github.com/go-pg/pg
+* https://pg.uptrace.dev/
