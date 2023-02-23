@@ -14,10 +14,6 @@ require (
 	github.com/go-pg/pg/extra/pgdebug/v10 v10.10.6
 	github.com/go-pg/pg/v10 v10.10.6
 	github.com/iamgoroot/dbie v0.0.0-00010101000000-000000000000
-	github.com/iamgoroot/dbie/core/bun v0.0.0-00010101000000-000000000000
-	github.com/iamgoroot/dbie/core/gorm v0.0.0-00010101000000-000000000000
-	github.com/iamgoroot/dbie/core/mongo v0.0.0-00010101000000-000000000000
-	github.com/iamgoroot/dbie/core/pg v0.0.0-00010101000000-000000000000
 	github.com/uptrace/bun v1.1.8
 	github.com/uptrace/bun/dialect/pgdialect v1.1.8
 	github.com/uptrace/bun/dialect/sqlitedialect v1.1.8
@@ -35,9 +31,6 @@ require (
 	github.com/go-pg/zerochecker v0.2.0 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/google/uuid v1.3.0 // indirect
-	github.com/iamgoroot/dbietool v0.0.0-20220912013132-99d8e85467f5 // indirect
-	github.com/iamgoroot/merge v0.0.0-20220619000042-8897b90b74c5 // indirect
-	github.com/iancoleman/strcase v0.2.0 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.12.1 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
@@ -69,7 +62,7 @@ require (
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
 	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4 // indirect
 	golang.org/x/sys v0.0.0-20220909162455-aba9fc2a8ff2 // indirect
-	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/text v0.3.8 // indirect
 	golang.org/x/tools v0.1.12 // indirect
 	lukechampine.com/uint128 v1.2.0 // indirect
 	mellium.im/sasl v0.3.0 // indirect
